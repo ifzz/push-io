@@ -1,21 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="/javascripts/config.js"></script>
     <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
     <meta charset="UTF-8">
     <title>MQTT</title>
 </head>
 <body>
 <script>
-    var client = mqtt.connect('ws://54.222.243.29:80/mqtt'); // you add a ws:// url here
-    client.subscribe("test/topic");
-
-    client.on("message", function (topic, payload) {
-        console.log([topic, payload].join(": "));
-        //client.end();
+    var client = mqtt.connect(MQTT_BROKER_URL, {'clean': false, 'clientId': 'mqttjs_' + Math.random().toString(16).substr(2, 8)}); // you add a ws:// url here
+    client.subscribe('test/topic', {'qos': 2}, function (err, granted) {
+        if (err) {
+            console.log(JSON.stringify(err));
+        }
+        console.log(JSON.stringify(granted));
     });
 
-    //client.publish("mqtt/demo", "hello world!");
+    client.on('message', function (topic, payload) {
+        console.log([topic, payload].join(': '));
+    });
+
+    client.on('connect', function (connack) {
+        console.log('connect: ' + JSON.stringify(connack));
+    });
+
+    client.on('reconnect', function () {
+        console.log('reconnect');
+    });
+
+    client.on('close', function () {
+        console.log('close');
+    });
+
+    client.on('offline', function () {
+        console.log('offline');
+    });
+
+    client.on('error', function (error) {
+        console.log('error: ' + JSON.stringify(error));
+    });
+
+    client.on('packetreceive', function (packet) {
+        console.log('packetreceive: ' + JSON.stringify(packet));
+    });
 </script>
 </body>
 </html>

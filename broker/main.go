@@ -9,7 +9,7 @@ import (
 
 func main() {
     config := util.GetInstance()
-    fmt.Printf("%+v\n", *config)
+    //fmt.Printf("%+v\n", *config)
 
     iris.Get("/api/v1/server", func(ctx *iris.Context) {
 
@@ -17,12 +17,12 @@ func main() {
         request.SetDebug(true)
 
         for _, value := range config.Cluster {
-            fmt.Println(value)
+            //fmt.Println(value)
             resp, _, errs := request.Get(fmt.Sprintf("http://%s/api/stats", value)).End()
             if (len(errs) > 0) {
                 continue
             }
-            fmt.Println(resp)
+            fmt.Printf("%+v\n", resp)
         }
 
         ctx.JSON(iris.StatusOK, iris.Map{

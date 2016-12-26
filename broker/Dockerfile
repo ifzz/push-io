@@ -5,7 +5,7 @@ RUN mkdir /log
 
 ADD ./config.json /config.json
 ADD ./main /main
-ADD ./templates /templates/
+#ADD ./templates /templates/
 
 EXPOSE 8080
 CMD ["/main"]

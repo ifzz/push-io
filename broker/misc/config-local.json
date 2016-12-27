@@ -6,6 +6,6 @@
     "pushServer": "http://54.222.243.29:80/mqtt/publish",
     "maxWorkers": 64,
     "maxQueue": 1024,
-    "mongoServer": "10.71.128.136",
+    "mongoServer": "127.0.0.1",
     "mongoPort": 27017
 }

@@ -4,6 +4,7 @@ import (
     "fmt"
     "github.com/kataras/iris"
     "github.com/parnurzeal/gorequest"
+    "github.com/iris-contrib/middleware/cors"
     "./util"
     "strings"
     "strconv"
@@ -18,7 +19,7 @@ type Resp struct {
 
 func main() {
     config := util.GetInstance()
-    //fmt.Printf("%+v\n", *config)
+    iris.Use(cors.Default())
 
     iris.Get("/api/v1/server", func(ctx *iris.Context) {
 

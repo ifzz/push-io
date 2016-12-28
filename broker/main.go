@@ -88,13 +88,6 @@ func notification(ctx *iris.Context) {
         return
     }
 
-    /*jsonString, err := json.Marshal(data.Message)
-    if err != nil {
-        ctx.Log("%+v\n", err)
-        ctx.EmitError(iris.StatusBadRequest)
-        return
-    }
-    fmt.Println(string(jsonString))*/
     now := time.Now()
     notification := &util.Notification{
         AppId: data.AppId,
@@ -146,7 +139,7 @@ func server(ctx *iris.Context) {
         for _, stat := range result {
             pair := strings.Split(stat, ":")
             if strings.Contains(pair[0], "clients") && strings.Contains(pair[0], "count") {
-                fmt.Println(stat)
+                //fmt.Println(stat)
                 clients_count, _ = strconv.Atoi(pair[1])
             }
         }

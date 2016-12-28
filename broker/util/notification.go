@@ -5,7 +5,6 @@ import (
     "fmt"
     "time"
     "encoding/json"
-    "strconv"
 )
 
 type Action interface {
@@ -37,7 +36,6 @@ func (n *Notification) Save() error {
 }
 
 func (n *Notification) Notify() error {
-    //request := gorequest.New().SetBasicAuth("gftrader", "A98D8B1134D34F6E161463F757139")
     request := gorequest.New().SetBasicAuth(n.AppId, n.AppKey)
     request.SetDebug(config.Debug)
 
@@ -76,12 +74,12 @@ func (n *Notification) Notify() error {
         Message: string(jsonString),
     }
 
-    fmt.Println(strconv.Quote(string(jsonString)))
-    _, body, errs := request.Post(config.PushServer).
+    //fmt.Println(strconv.Quote(string(jsonString)))
+    _, _, errs := request.Post(config.PushServer).
         Type("form").
         Send(data).
         End()
-    fmt.Println(body)
+    //fmt.Println(body)
 
     if len(errs) > 0 {
         return errs[0]

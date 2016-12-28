@@ -16,6 +16,7 @@ import (
 const MaxUint = ^uint(0)
 const MaxInt = int(MaxUint >> 1)
 
+var key = util.InitKey()
 var config = util.InitConfig()
 var jobQueue chan util.Job
 
@@ -65,16 +66,39 @@ func index(ctx *iris.Context) {
 func notification(ctx *iris.Context) {
     type Data struct {
         Topic   string `json:"topic"`
-        Message string `json:"message"`
+        Message map[string]interface{} `json:"message"`
+        AppId string `json:"appId"`
+        AppKey string `json:"appKey"`
     }
     data := &Data{}
     if err := ctx.ReadJSON(data); err != nil {
+        ctx.Log("%+v\n", err)
         ctx.EmitError(iris.StatusInternalServerError)
         return
     }
 
+    found := false
+    for _, app := range key.Apps {
+        if (app.AppId == data.AppId && app.AppKey == data.AppKey) {
+            found = true
+        }
+    }
+    if (!found) {
+        ctx.EmitError(iris.StatusUnauthorized)
+        return
+    }
+
+    /*jsonString, err := json.Marshal(data.Message)
+    if err != nil {
+        ctx.Log("%+v\n", err)
+        ctx.EmitError(iris.StatusBadRequest)
+        return
+    }
+    fmt.Println(string(jsonString))*/
     now := time.Now()
     notification := &util.Notification{
+        AppId: data.AppId,
+        AppKey: data.AppKey,
         Id: uuid.NewV4().String(),
         Timestamp: now.Unix(),
         Created: now,

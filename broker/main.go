@@ -99,23 +99,25 @@ func notification(ctx *iris.Context) {
         Retain: 1,
         Topic: data.Topic,
         Message: data.Message,
+        Success: false,
     }
     ctx.Log("%+v\n", *notification)
 
     job := util.Job{
         Payload: notification,
         Do: func(action util.Action) {
-            if err := action.Notify(); err != nil {
-                ctx.Log("fail to notify %+v, error %+v\n", action, err)
-            }
             if err := action.Save(); err != nil {
                 ctx.Log("fail to save %+v, error %+v\n", action, err)
+            }
+
+            if err := action.Notify(); err != nil {
+                ctx.Log("fail to notify %+v, error %+v\n", action, err)
             }
         },
     }
     jobQueue <- job
 
-    ctx.JSON(iris.StatusOK, iris.Map{})
+    ctx.Text(iris.StatusOK, "ok")
 }
 
 func server(ctx *iris.Context) {

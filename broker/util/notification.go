@@ -5,6 +5,7 @@ import (
     "fmt"
     "time"
     "encoding/json"
+    "gopkg.in/mgo.v2/bson"
 )
 
 type Action interface {
@@ -22,6 +23,7 @@ type Notification struct {
     Retain    int `bson:"retain"`
     Topic     string `bson:"topic"`
     Message   map[string]interface{} `bson:"message"`
+    Success   bool `bson:"success"`
 }
 
 func (n *Notification) Save() error {
@@ -29,10 +31,17 @@ func (n *Notification) Save() error {
     defer s.Close()
 
     c := s.DB("dolphin").C("notification")
-    if err := c.Insert(n); err != nil {
-        return err
-    }
-    return nil
+    return c.Insert(n)
+}
+
+func (n *Notification) Update() error {
+    s := session.Copy()
+    defer s.Close()
+
+    c := s.DB("dolphin").C("notification")
+    query := bson.M{"id": n.Id}
+    change := bson.M{"$set": bson.M{"success": true}}
+    return c.Update(query, change)
 }
 
 func (n *Notification) Notify() error {
@@ -84,5 +93,6 @@ func (n *Notification) Notify() error {
     if len(errs) > 0 {
         return errs[0]
     }
-    return nil
+
+    return n.Update()
 }

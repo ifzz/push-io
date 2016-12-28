@@ -18,6 +18,21 @@ func NewMongoSession() *mgo.Session {
         panic(err)
     }
 
+    c := session.DB("dolphin").C("notification")
+    // Index
+    index := mgo.Index{
+        Key:        []string{"id", "success"},
+        Unique:     true,
+        DropDups:   true,
+        Background: true,
+        Sparse:     true,
+    }
+
+    err = c.EnsureIndex(index)
+    if err != nil {
+        panic(err)
+    }
+
     session.SetMode(mgo.Monotonic, true)
 
     return session

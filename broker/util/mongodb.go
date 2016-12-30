@@ -21,7 +21,7 @@ func NewMongoSession() *mgo.Session {
     c := session.DB("dolphin").C("notification")
     // Index
     index := mgo.Index{
-        Key:        []string{"id", "success"},
+        Key:        []string{"id"},
         Unique:     true,
         DropDups:   true,
         Background: true,

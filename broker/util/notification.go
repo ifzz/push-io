@@ -8,22 +8,18 @@ import (
     "gopkg.in/mgo.v2/bson"
 )
 
-type Action interface {
-    Save() error
-    Notify() error
-}
-
 type Notification struct {
-    AppId     string `bson:"appId"`
-    AppKey    string `bson:"appKey"`
-    Id        string `bson:"id"`
-    Timestamp int64 `bson:"timestamp"`
-    Created   time.Time `bson:"Created"`
-    Qos       int `bson:"qos"`
-    Retain    int `bson:"retain"`
-    Topic     string `bson:"topic"`
-    Message   map[string]interface{} `bson:"message"`
-    Success   bool `bson:"success"`
+    AppId       string `bson:"appId"`
+    AppKey      string `bson:"appKey"`
+    Id          string `bson:"id"`
+    Timestamp   int64 `bson:"timestamp"`
+    LastUpdated time.Time `bson:"lastUpdated"`
+    Qos         int `bson:"qos"`
+    Retain      int `bson:"retain"`
+    Topic       string `bson:"topic"`
+    Message     map[string]interface{} `bson:"message"`
+    Status      int `bson:"status"`
+    Error       string `bson:"error"`
 }
 
 func (n *Notification) Save() error {
@@ -34,13 +30,19 @@ func (n *Notification) Save() error {
     return c.Insert(n)
 }
 
+const (
+    SENT = iota
+    RECV = iota
+)
+
 func (n *Notification) Update() error {
     s := session.Copy()
     defer s.Close()
 
+    now := time.Now()
     c := s.DB("dolphin").C("notification")
     query := bson.M{"id": n.Id}
-    change := bson.M{"$set": bson.M{"success": true}}
+    change := bson.M{"$set": bson.M{"status": RECV, "lastUpdated": now, "timestamp": now.Unix()}}
     return c.Update(query, change)
 }
 
@@ -83,16 +85,17 @@ func (n *Notification) Notify() error {
         Message: string(jsonString),
     }
 
-    //fmt.Println(strconv.Quote(string(jsonString)))
     _, _, errs := request.Post(config.PushServer).
         Type("form").
         Send(data).
         End()
-    //fmt.Println(body)
 
     if len(errs) > 0 {
-        return errs[0]
+        err := fmt.Sprintf("%+v", errs[0])
+        fmt.Println(err)
+        n.Error = err
     }
+    n.Status = SENT
 
-    return n.Update()
+    return n.Save()
 }

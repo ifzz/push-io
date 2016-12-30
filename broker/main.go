@@ -1,20 +1,13 @@
 package main
 
 import (
-    "fmt"
     "github.com/kataras/iris"
-    "github.com/parnurzeal/gorequest"
     "github.com/iris-contrib/middleware/cors"
     "github.com/iris-contrib/middleware/logger"
-    "strings"
-    "strconv"
     "time"
     "github.com/satori/go.uuid"
     "./util"
 )
-
-const MaxUint = ^uint(0)
-const MaxInt = int(MaxUint >> 1)
 
 var key = util.InitKey()
 var config = util.InitConfig()
@@ -56,11 +49,58 @@ func main() {
 
     iris.Post("/api/v1/notification", notification)
 
+    iris.Post("/api/v1/ack", ack)
+
     iris.Listen(":8080")
 }
 
 func index(ctx *iris.Context) {
     ctx.MustRender("index.html", struct {}{})
+}
+
+func ack(ctx *iris.Context) {
+    type Data struct {
+        Id     string `json:"id"`
+        AppId  string `json:"appId"`
+        AppKey string `json:"appKey"`
+    }
+    data := &Data{}
+    if err := ctx.ReadJSON(data); err != nil {
+        ctx.Log("%+v\n", err)
+        ctx.EmitError(iris.StatusInternalServerError)
+        return
+    }
+
+    if (!IsAuthorized(data.AppId, data.AppKey)) {
+        ctx.EmitError(iris.StatusUnauthorized)
+        return
+    }
+
+    job := util.Job{
+        Payload: &util.Notification{
+            Id: data.Id,
+            AppId: data.AppId,
+            AppKey: data.AppKey,
+        },
+        Do: func(action util.Action) {
+            if err := action.Update(); err != nil {
+                ctx.Log("fail to update %+v, error %+v\n", action, err)
+            }
+        },
+    }
+    jobQueue <- job
+
+    ctx.Text(iris.StatusOK, "ok")
+}
+
+func IsAuthorized(appId string, appKey string) bool {
+    found := false
+    for _, app := range key.Apps {
+        if (app.AppId == appId && app.AppKey == appKey) {
+            found = true
+        }
+    }
+    return found
 }
 
 func notification(ctx *iris.Context) {
@@ -77,13 +117,7 @@ func notification(ctx *iris.Context) {
         return
     }
 
-    found := false
-    for _, app := range key.Apps {
-        if (app.AppId == data.AppId && app.AppKey == data.AppKey) {
-            found = true
-        }
-    }
-    if (!found) {
+    if (!IsAuthorized(data.AppId, data.AppKey)) {
         ctx.EmitError(iris.StatusUnauthorized)
         return
     }
@@ -93,23 +127,18 @@ func notification(ctx *iris.Context) {
         AppId: data.AppId,
         AppKey: data.AppKey,
         Id: uuid.NewV4().String(),
-        Timestamp: now.Unix(),
-        Created: now,
         Qos: 2,
         Retain: 1,
         Topic: data.Topic,
         Message: data.Message,
-        Success: false,
+        LastUpdated: now,
+        Timestamp: now.Unix(),
     }
     ctx.Log("%+v\n", *notification)
 
     job := util.Job{
         Payload: notification,
         Do: func(action util.Action) {
-            if err := action.Save(); err != nil {
-                ctx.Log("fail to save %+v, error %+v\n", action, err)
-            }
-
             if err := action.Notify(); err != nil {
                 ctx.Log("fail to notify %+v, error %+v\n", action, err)
             }
@@ -121,37 +150,15 @@ func notification(ctx *iris.Context) {
 }
 
 func server(ctx *iris.Context) {
-    request := gorequest.New().SetBasicAuth(config.Username, config.Password)
-    request.SetDebug(config.Debug)
+    host, count := util.GetServer()
 
-    count := MaxInt
-    host := ""
-    for _, value := range config.Cluster {
-        //fmt.Println(value)
-        _, body, errs := request.Get(fmt.Sprintf("http://%s/api/stats", value)).End()
-        if (len(errs) > 0) {
-            fmt.Printf("error %+v\n", errs[0])
-            continue
-        }
-        //fmt.Println(body);
-        ctx.Log("%s:%s\n", value, body)
-
-        result := strings.Split(body, ",")
-        clients_count := 0
-        for _, stat := range result {
-            pair := strings.Split(stat, ":")
-            if strings.Contains(pair[0], "clients") && strings.Contains(pair[0], "count") {
-                //fmt.Println(stat)
-                clients_count, _ = strconv.Atoi(pair[1])
-            }
-        }
-
-        if (clients_count < count) {
-            address := strings.Split(value, ":")
-            host = address[0]
-            count = clients_count
-        }
+    job := util.Job{
+        Payload: &util.Notification{},
+        Do: func(action util.Action) {
+            action.GetStatus()
+        },
     }
+    jobQueue <- job
 
     ctx.JSON(iris.StatusOK, iris.Map{
         "host": host,

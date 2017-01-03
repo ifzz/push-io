@@ -9,6 +9,7 @@ var router = express.Router();
 var redis = require('redis');
 var bluebird = require('bluebird');
 var client = redis.createClient();
+var auth = require('basic-auth');
 
 const BROKER_NODES = 'io.gf.com.cn:nodes';
 const PREFIX_STATS = 'io.gf.com.cn:stats:';
@@ -20,6 +21,13 @@ bluebird.promisifyAll(redis.Multi.prototype);
 
 /* GET home page. */
 router.get('/server', function(req, res) {
+    var credentials = auth(req);
+    console.log(credentials);
+    if (!credentials || credentials.name !== 'gftrader' || credentials.pass !== 'A98D8B1134D34F6E161463F757139') {
+        res.statusCode = 401;
+        res.end('Access denied');
+        return;
+    }
 
     client.smembersAsync(BROKER_NODES)
         .then(function (nodes) {
@@ -42,11 +50,12 @@ router.get('/server', function(req, res) {
             if (host) {
                 res.json({'host': host, 'count': count});
             } else {
-                res.json({'error': 'not found'});
+                res.status(500).send('no connector available');
             }
         })
         .catch(function (err) {
             console.log(err);
+            res.status(500).send(JSON.stringify(err));
         });
 });
 

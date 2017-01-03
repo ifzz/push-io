@@ -1,0 +1,9 @@
+{
+    "redisHost": "127.0.0.1",
+    "redisPort": 6379,
+    "brokerHost": "127.0.0.1",
+    "brokerPort": 18083,
+    "username": "admin",
+    "password": "public",
+    "proxy": ""
+}

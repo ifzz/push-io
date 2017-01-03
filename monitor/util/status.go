@@ -29,17 +29,19 @@ const FIELD_CLIENTS = "clients"
 
 const FIELD_STATUS = "status"
 
+const FIELD_ADDRESS = "address"
+
 func Update() {
     nodes := queryNodes()
     for _, node := range nodes {
         tokens := strings.Split(node.Name, "@")
         node.Address = tokens[1]
-        /*if node.Address == "10.71.128.85" {
+        if node.Address == "10.71.128.85" {
             node.Address = "54.222.243.29"
         }
         if node.Address == "10.71.128.145" {
             node.Address = "54.223.124.84"
-        }*/
+        }
         queryStats(&node)
         fmt.Println(node)
         save(&node)
@@ -88,7 +90,7 @@ func save(node *Node) {
     if _, err := conn.Do("sadd", BROKER_NODES, node.Address); err != nil {
         fmt.Printf("error %+v\n", err)
     }
-    if _, err := conn.Do("HMSET", fmt.Sprintf(BROKER_STATS, node.Address), FIELD_CLIENTS, node.Clients, FIELD_STATUS, node.ClusterStatus); err != nil {
+    if _, err := conn.Do("HMSET", fmt.Sprintf(BROKER_STATS, node.Address), FIELD_CLIENTS, node.Clients, FIELD_STATUS, node.ClusterStatus, FIELD_ADDRESS, node.Address); err != nil {
         fmt.Printf("error %+v\n", err)
     }
 }

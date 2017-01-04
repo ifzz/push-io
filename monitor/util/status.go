@@ -36,12 +36,6 @@ func Update() {
     for _, node := range nodes {
         tokens := strings.Split(node.Name, "@")
         node.Address = tokens[1]
-        if node.Address == "10.71.128.85" {
-            node.Address = "54.222.243.29"
-        }
-        if node.Address == "10.71.128.145" {
-            node.Address = "54.223.124.84"
-        }
         queryStats(&node)
         fmt.Println(node)
         save(&node)

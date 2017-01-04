@@ -3,16 +3,16 @@
  */
 
 'use strict';
+var utils = require('../utils');
+var config = utils.config;
+var logger = utils.getLogger('[API] ');
 
 var express = require('express');
 var router = express.Router();
 var redis = require('redis');
 var bluebird = require('bluebird');
-var client = redis.createClient();
+var client = redis.createClient(config.REDIS_PORT, config.REDIS_HOST, config.REDIS_OPTIONS);
 var auth = require('basic-auth');
-var utils = require('../utils');
-var config = utils.config;
-var logger = utils.getLogger('[API] ');
 var _ = require('lodash');
 
 const BROKER_NODES = 'io.gf.com.cn:nodes';

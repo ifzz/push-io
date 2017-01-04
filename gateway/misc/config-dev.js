@@ -1,8 +1,11 @@
-// Setting this to null will output logs to the log folder of current application.
+/**
+ * Created by zhibinpan on 4/1/2017.
+ */
+
 module.exports.LOG_DIR = null;
 
 // Default to 127.0.0.1
-module.exports.REDIS_HOST = 'localhost';
+module.exports.REDIS_HOST = '10.71.128.145';
 
 // Default to 6379
 module.exports.REDIS_PORT = 6379;

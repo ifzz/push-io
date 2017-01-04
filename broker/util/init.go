@@ -16,8 +16,8 @@ func init() {
         config = InitConfig()
         session = NewMongoSession()
         key = InitKey()
-        for _, value := range config.Cluster {
+        /*for _, value := range config.Cluster {
             cluster[value] = 0;
-        }
+        }*/
     })
 }

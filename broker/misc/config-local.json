@@ -1,7 +1,6 @@
 {
     "username": "admin",
     "password": "public",
-    "cluster": ["54.222.243.29:18083", "54.223.124.84:18083"],
     "debug": false,
     "pushServer": "http://54.222.243.29:80/mqtt/publish",
     "maxWorkers": 64,

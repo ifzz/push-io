@@ -5,7 +5,7 @@ import (
     "fmt"
     "time"
     "encoding/json"
-    "gopkg.in/mgo.v2/bson"
+    "net/http"
 )
 
 type Notification struct {
@@ -18,7 +18,6 @@ type Notification struct {
     Retain      int `bson:"retain"`
     Topic       string `bson:"topic"`
     Message     map[string]interface{} `bson:"message"`
-    Status      int `bson:"status"`
     Error       string `bson:"error"`
 }
 
@@ -28,22 +27,6 @@ func (n *Notification) Save() error {
 
     c := s.DB("dolphin").C("notification")
     return c.Insert(n)
-}
-
-const (
-    SENT = iota
-    RECV = iota
-)
-
-func (n *Notification) Update() error {
-    s := session.Copy()
-    defer s.Close()
-
-    now := time.Now()
-    c := s.DB("dolphin").C("notification")
-    query := bson.M{"id": n.Id}
-    change := bson.M{"$set": bson.M{"status": RECV, "lastUpdated": now, "timestamp": now.Unix()}}
-    return c.Update(query, change)
 }
 
 func (n *Notification) Notify() error {
@@ -88,6 +71,7 @@ func (n *Notification) Notify() error {
     _, _, errs := request.Post(config.PushServer).
         Type("form").
         Send(data).
+        Retry(3, 2 * time.Minute, http.StatusBadRequest, http.StatusInternalServerError).
         End()
 
     if len(errs) > 0 {
@@ -95,7 +79,6 @@ func (n *Notification) Notify() error {
         fmt.Println(err)
         n.Error = err
     }
-    n.Status = SENT
 
     return n.Save()
 }

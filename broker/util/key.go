@@ -9,7 +9,6 @@ import (
 type App struct {
     AppId     string `json:"appId"`
     AppKey    string `json:"appKey"`
-    AppSecret string `json:"appSecret"`
 }
 
 type Key struct {

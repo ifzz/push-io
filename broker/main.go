@@ -45,62 +45,13 @@ func init() {
 func main() {
     iris.Get("/", index)
 
-    iris.Get("/api/v1/server", server)
-
     iris.Post("/api/v1/notification", notification)
-
-    iris.Post("/api/v1/ack", ack)
 
     iris.Listen(":8080")
 }
 
 func index(ctx *iris.Context) {
     ctx.MustRender("index.html", struct {}{})
-}
-
-func ack(ctx *iris.Context) {
-    type Data struct {
-        Id     string `json:"id"`
-        AppId  string `json:"appId"`
-        AppKey string `json:"appKey"`
-    }
-    data := &Data{}
-    if err := ctx.ReadJSON(data); err != nil {
-        ctx.Log("%+v\n", err)
-        ctx.EmitError(iris.StatusInternalServerError)
-        return
-    }
-
-    if (!IsAuthorized(data.AppId, data.AppKey)) {
-        ctx.EmitError(iris.StatusUnauthorized)
-        return
-    }
-
-    job := util.Job{
-        Payload: &util.Notification{
-            Id: data.Id,
-            AppId: data.AppId,
-            AppKey: data.AppKey,
-        },
-        Do: func(action util.Action) {
-            if err := action.Update(); err != nil {
-                ctx.Log("fail to update %+v, error %+v\n", action, err)
-            }
-        },
-    }
-    jobQueue <- job
-
-    ctx.Text(iris.StatusOK, "ok")
-}
-
-func IsAuthorized(appId string, appKey string) bool {
-    found := false
-    for _, app := range key.Apps {
-        if (app.AppId == appId && app.AppKey == appKey) {
-            found = true
-        }
-    }
-    return found
 }
 
 func notification(ctx *iris.Context) {
@@ -117,7 +68,7 @@ func notification(ctx *iris.Context) {
         return
     }
 
-    if (!IsAuthorized(data.AppId, data.AppKey)) {
+    if (!isAuthorized(data.AppId, data.AppKey)) {
         ctx.EmitError(iris.StatusUnauthorized)
         return
     }
@@ -149,19 +100,11 @@ func notification(ctx *iris.Context) {
     ctx.Text(iris.StatusOK, "ok")
 }
 
-func server(ctx *iris.Context) {
-    host, count := util.GetServer()
-
-    job := util.Job{
-        Payload: &util.Notification{},
-        Do: func(action util.Action) {
-            action.GetStatus()
-        },
+func isAuthorized(appId string, appKey string) bool {
+    for _, configApp := range key.Apps {
+        if configApp.AppId == appId && configApp.AppKey == appKey {
+            return true
+        }
     }
-    jobQueue <- job
-
-    ctx.JSON(iris.StatusOK, iris.Map{
-        "host": host,
-        "count": count,
-    })
+    return false
 }

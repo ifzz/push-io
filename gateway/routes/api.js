@@ -10,6 +10,10 @@ var redis = require('redis');
 var bluebird = require('bluebird');
 var client = redis.createClient();
 var auth = require('basic-auth');
+var utils = require('../utils');
+var config = utils.config;
+var logger = utils.getLogger('[API] ');
+var _ = require('lodash');
 
 const BROKER_NODES = 'io.gf.com.cn:nodes';
 const PREFIX_STATS = 'io.gf.com.cn:stats:';
@@ -22,8 +26,17 @@ bluebird.promisifyAll(redis.Multi.prototype);
 /* GET home page. */
 router.get('/server', function(req, res) {
     var credentials = auth(req);
-    console.log(credentials);
-    if (!credentials || credentials.name !== 'gftrader' || credentials.pass !== 'A98D8B1134D34F6E161463F757139') {
+    //logger.debug(JSON.stringify(credentials));
+    if (!credentials) {
+        res.statusCode = 401;
+        res.end('Access denied');
+        return;
+    }
+
+    var found = _.find(config.ADMIN_CREDENTIALS, function (user) {
+        return user.name === credentials.name && user.pass === credentials.pass;
+    });
+    if (!found) {
         res.statusCode = 401;
         res.end('Access denied');
         return;
@@ -39,7 +52,7 @@ router.get('/server', function(req, res) {
         })
         .then(function (nodes) {
             var host = null;
-            var count = 65536;
+            var count = Number.MAX_SAFE_INTEGER;
             for (var i = 0; i < nodes.length; i++) {
                 if (nodes[i][1] < count) {
                     count = nodes[i][1];
@@ -54,7 +67,7 @@ router.get('/server', function(req, res) {
             }
         })
         .catch(function (err) {
-            console.log(err);
+            logger.error(JSON.stringify(err));
             res.status(500).send(JSON.stringify(err));
         });
 });

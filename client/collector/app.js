@@ -66,9 +66,9 @@ client.on('message', function (topic, message) {
 
 client.subscribe('ack/#', {'qos': 2}, function (err, granted) {
     if (err) {
-        utils.log('fail to subscribe ' + [err].join());
+        utils.log('fail to subscribe ' + JSON.stringify(err));
     }
-    utils.log('ok to subscribe ' + [granted].join());
+    utils.log('ok to subscribe ' + JSON.stringify(granted));
 });
 
 utils.log('running');

@@ -1,7 +1,9 @@
 /**
  * Created by zhibinpan on 20/12/2016.
  */
+
 'use strict';
+
 var Ack = require('./model/ack');
 var utils = require('./utils');
 var config = utils.config;
@@ -45,14 +47,17 @@ client.on('connect', function () {
 client.on('message', function (topic, message) {
     // message is Buffer
     //console.log([topic, message].join(": "));
-    var ack = new Ack({id: message});
-    ack.save(function (err) {
-        if (err) {
+
+    Ack.findOneAsync({id: message})
+        .then(function (entity) {
+            if (!entity) {
+                var ack = new Ack({id: message});
+                return ack.saveAsync();
+            }
+        })
+        .catch(function (err) {
             utils.error(JSON.stringify(err));
-        } else {
-            utils.log(message);
-        }
-    });
+        });
 });
 
 client.subscribe('ack/#', {'qos': 2}, function (err, granted) {

@@ -41,30 +41,34 @@ mongoose.connect(config.MONGO_DB_CONNECTION_STRING, options, function (error) {
 });
 
 client.on('connect', function () {
-    console.log('connect');
+    utils.log('connect');
 });
 
 client.on('message', function (topic, message) {
     // message is Buffer
     //console.log([topic, message].join(": "));
 
-    Ack.findOneAsync({id: message})
+    var messageId = [message].join();
+    Ack.findOneAsync({id: messageId})
         .then(function (entity) {
             if (!entity) {
-                var ack = new Ack({id: message});
+                var ack = new Ack({id: messageId});
                 return ack.saveAsync();
             }
         })
+        .then(function (result) {
+            utils.log('ok to save ' + JSON.stringify(result));
+        })
         .catch(function (err) {
-            utils.error(JSON.stringify(err));
+            utils.error('fail to save due to ' + JSON.stringify(err));
         });
 });
 
 client.subscribe('ack/#', {'qos': 2}, function (err, granted) {
     if (err) {
-        console.log(JSON.stringify(err));
+        utils.log('fail to subscribe ' + [err].join());
     }
-    console.log(JSON.stringify(granted));
+    utils.log('ok to subscribe ' + [granted].join());
 });
 
-console.log('running');
+utils.log('running');

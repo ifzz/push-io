@@ -14,10 +14,12 @@ var config = util.InitConfig()
 var jobQueue chan util.Job
 
 func init() {
+    // initialize the job queue
     jobQueue = make(chan util.Job, config.MaxQueue)
     dispatcher := util.NewDispatcher(jobQueue)
     dispatcher.Run()
 
+    // initialize the logger for iris
     irisLogger := logger.New(logger.Config{
         // Status displays status code
         Status: true,
@@ -30,23 +32,29 @@ func init() {
     })
     iris.Use(irisLogger)
 
+    // initialize the configuration of iris
     iris.Config.IsDevelopment = config.Debug // reloads the templates on each request, defaults to false
     iris.Config.Gzip  = true // compressed gzip contents to the client, the same for Serializers also, defaults to false
     iris.Config.Charset = "UTF-8" // defaults to "UTF-8", the same for Serializers also
 
+    // set up the static files
     iris.Static("/scripts", "./templates/scripts/", 1)
     iris.Static("/styles", "./templates/styles/", 1)
     iris.Static("/fonts", "./templates/fonts/", 1)
     iris.Static("/images", "./templates/images/", 1)
 
+    // enable CORS
     iris.Use(cors.Default())
 }
 
 func main() {
+    // show the console web page
     iris.Get("/", index)
 
+    // handle the notification request
     iris.Post("/api/v1/notification", notification)
 
+    // listening on port 8080
     iris.Listen(":8080")
 }
 

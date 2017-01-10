@@ -3,7 +3,6 @@ package util
 import (
     "sync"
     "github.com/garyburd/redigo/redis"
-    //"fmt"
 )
 
 var config *Config
@@ -14,6 +13,5 @@ func init() {
     once.Do(func() {
         config = NewConfig()
         redisPool = NewRedisPool()
-        //fmt.Printf("%+v\n", *config)
     })
 }

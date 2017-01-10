@@ -42,6 +42,7 @@ func Update() {
     }
 }
 
+// get the status of node
 func queryStats(node *Node) {
     result := query(fmt.Sprintf(API_STATS, node.Address, config.BrokerPort))
     if len(result) > 0 {
@@ -51,6 +52,7 @@ func queryStats(node *Node) {
     }
 }
 
+// get the list of nodes in cluster
 func queryNodes() []Node {
     var nodes []Node
     result := query(fmt.Sprintf(API_NODES, config.BrokerHost, config.BrokerPort))
@@ -81,9 +83,12 @@ func save(node *Node) {
     conn := redisPool.Get()
     defer conn.Close()
 
+    // save the list of node
     if _, err := conn.Do("sadd", BROKER_NODES, node.Address); err != nil {
         fmt.Printf("error %+v\n", err)
     }
+
+    // save the status of node
     if _, err := conn.Do("HMSET", fmt.Sprintf(BROKER_STATS, node.Address), FIELD_CLIENTS, node.Clients, FIELD_STATUS, node.ClusterStatus, FIELD_ADDRESS, node.Address); err != nil {
         fmt.Printf("error %+v\n", err)
     }

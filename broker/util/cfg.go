@@ -11,7 +11,6 @@ const CONFIG_PATH = "./config.json"
 type Config struct {
     Username   string
     Password   string
-    //Cluster    []string
     Debug      bool
     PushServer string
     MaxWorkers int

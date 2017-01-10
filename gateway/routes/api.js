@@ -3,6 +3,7 @@
  */
 
 'use strict';
+
 var utils = require('../utils');
 var config = utils.config;
 var logger = utils.getLogger('[API] ');
@@ -24,6 +25,7 @@ bluebird.promisifyAll(redis.RedisClient.prototype);
 bluebird.promisifyAll(redis.Multi.prototype);
 
 /* GET home page. */
+// query which server is available
 router.get('/server', function(req, res) {
     var credentials = auth(req);
     //logger.debug(JSON.stringify(credentials));

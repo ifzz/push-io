@@ -34,9 +34,13 @@ product env : qq cloud
 
 wget -O emqttd-docker-v2.0.zip http://emqtt.com/downloads/latest/docker
 
-sudo docker run --restart=always -itd --net='host' -e EMQ_LOADED_PLUGINS="emq_recon,emq_dashboard,emq_mod_presence,emq_mod_retainer,emq_mod_subscription,emq_auth_username" -e 'EMQ_ALLOW_ANONYMOUS=false' -e 'EMQ_HTTP_PORT=80' -e 'EMQ_NAME=emqttd' -e 'EMQ_HOST=119.29.28.42'  --name emq emq:latest
+unzip emqttd-docker-v2.0.zip
 
-sudo docker run --restart=always -itd --net='host' -e EMQ_LOADED_PLUGINS="emq_recon,emq_dashboard,emq_mod_presence,emq_mod_retainer,emq_mod_subscription,emq_auth_username" -e 'EMQ_ALLOW_ANONYMOUS=false' -e 'EMQ_HTTP_PORT=80' -e 'EMQ_NAME=emqttd' -e 'EMQ_HOST=119.29.28.252'  --name emq emq:latest
+sudo docker load < emqttd-docker-v2.0.6
+
+sudo docker run --restart=always -itd --net='host' -e EMQ_LOADED_PLUGINS="emq_recon,emq_dashboard,emq_mod_presence,emq_mod_retainer,emq_mod_subscription,emq_auth_username" -e 'EMQ_ALLOW_ANONYMOUS=false' -e 'EMQ_HTTP_PORT=80' -e 'EMQ_NAME=emqttd' -e 'EMQ_HOST=119.29.28.42'   --name emq emqttd-docker-v2.0.6
+
+sudo docker run --restart=always -itd --net='host' -e EMQ_LOADED_PLUGINS="emq_recon,emq_dashboard,emq_mod_presence,emq_mod_retainer,emq_mod_subscription,emq_auth_username" -e 'EMQ_ALLOW_ANONYMOUS=false' -e 'EMQ_HTTP_PORT=80' -e 'EMQ_NAME=emqttd' -e 'EMQ_HOST=119.29.28.252'  --name emq emqttd-docker-v2.0.6
 
 ./bin/emqttd_ctl cluster join emqttd@119.29.28.252
 

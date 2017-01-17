@@ -16,13 +16,13 @@ var f MQTT.MessageHandler = func(client MQTT.Client, msg MQTT.Message) {
     now := time.Now()
     job := util.Job{
         Payload: &util.Notification{
-            Id: msg.Payload(),
+            Id: string(msg.Payload()),
             LastUpdated: now,
             Timestamp: now.Unix(),
         },
         Do: func(action util.Action) {
-            if err := action.Ack(); err != nil {
-                fmt.Printf("fail to notify %+v, error %+v\n", action, err)
+            if err := action.PushAck(); err != nil {
+                fmt.Printf("fail to handle push ack event %+v, error %+v\n", action, err)
             }
         },
     }
@@ -65,5 +65,9 @@ func main() {
     if token := c.Subscribe("ack/#", 2, nil); token.Wait() && token.Error() != nil {
         fmt.Println(token.Error())
         os.Exit(1)
+    }
+
+    for t := range time.NewTicker(time.Minute).C {
+        fmt.Println(t)
     }
 }

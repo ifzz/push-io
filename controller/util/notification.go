@@ -19,7 +19,7 @@ type Notification struct {
     Ack         bool `bson:"ack"`
 }
 
-func (n *Notification) Ack() error {
+func (n *Notification) PushAck() error {
 
     now := time.Now()
 

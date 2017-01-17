@@ -1,3 +1,5 @@
+dev env : aws cloud
+
 sudo docker run --restart=always -itd --net='host' -e EMQ_LOADED_PLUGINS="emq_recon,emq_dashboard,emq_mod_presence,emq_mod_retainer,emq_mod_subscription,emq_auth_username" -e 'EMQ_ALLOW_ANONYMOUS=false' -e 'EMQ_HTTP_PORT=80' -e 'EMQ_NAME=emqttd' -e 'EMQ_HOST=54.222.243.29'  --name emq docker-aws.gf.com.cn/emq:latest
 
 sudo docker run --restart=always -itd --net='host' -e EMQ_LOADED_PLUGINS="emq_recon,emq_dashboard,emq_mod_presence,emq_mod_retainer,emq_mod_subscription,emq_auth_username" -e 'EMQ_ALLOW_ANONYMOUS=false' -e 'EMQ_HTTP_PORT=80' -e 'EMQ_NAME=emqttd' -e 'EMQ_HOST=54.223.124.84' --name emq docker-aws.gf.com.cn/emq:latest
@@ -24,3 +26,22 @@ curl -v --basic -u gftrader:A98D8B1134D34F6E161463F757139 -k http://54.223.124.8
 
 
 curl -v --basic -u admin:public -k http://54.223.124.84:18083/api/nodes
+
+
+
+
+product env : qq cloud
+
+wget -O emqttd-docker-v2.0.zip http://emqtt.com/downloads/latest/docker
+
+sudo docker run --restart=always -itd --net='host' -e EMQ_LOADED_PLUGINS="emq_recon,emq_dashboard,emq_mod_presence,emq_mod_retainer,emq_mod_subscription,emq_auth_username" -e 'EMQ_ALLOW_ANONYMOUS=false' -e 'EMQ_HTTP_PORT=80' -e 'EMQ_NAME=emqttd' -e 'EMQ_HOST=119.29.28.42'  --name emq emq:latest
+
+sudo docker run --restart=always -itd --net='host' -e EMQ_LOADED_PLUGINS="emq_recon,emq_dashboard,emq_mod_presence,emq_mod_retainer,emq_mod_subscription,emq_auth_username" -e 'EMQ_ALLOW_ANONYMOUS=false' -e 'EMQ_HTTP_PORT=80' -e 'EMQ_NAME=emqttd' -e 'EMQ_HOST=119.29.28.252'  --name emq emq:latest
+
+./bin/emqttd_ctl cluster join emqttd@119.29.28.252
+
+./bin/emqttd_ctl users add gftrader 1163CFFD87155CD634CBD3DA9F53D
+
+./bin/emqttd_ctl users add gfnbop 988733B9DDB81E626E4A84D232676
+
+./bin/emqttd_ctl users add monitor 92B57FEEBF7BE38B5D6ABE1C98D85

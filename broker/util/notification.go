@@ -19,6 +19,7 @@ type Notification struct {
     Topic       string `bson:"topic"`
     Message     map[string]interface{} `bson:"message"`
     Error       string `bson:"error"`
+    Ack         bool `bson:"ack"`
 }
 
 func (n *Notification) Save() error {
@@ -79,6 +80,7 @@ func (n *Notification) Notify() error {
         fmt.Println(err)
         n.Error = err
     }
+    n.Ack = false
 
     return n.Save()
 }

@@ -2,7 +2,7 @@
 module.exports.LOG_DIR = null;
 
 // Default to 127.0.0.1
-module.exports.REDIS_HOST = 'localhost';
+module.exports.REDIS_HOST = '127.0.0.1';
 
 // Default to 6379
 module.exports.REDIS_PORT = 6379;

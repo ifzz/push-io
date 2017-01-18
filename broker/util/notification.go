@@ -6,6 +6,7 @@ import (
     "time"
     "encoding/json"
     "net/http"
+    "strings"
 )
 
 type Notification struct {
@@ -65,7 +66,7 @@ func (n *Notification) Notify() error {
     data := Data{
         Qos: n.Qos,
         Retain: n.Retain,
-        Topic: n.Topic,
+        Topic: strings.ToUpper(n.AppId) + "/" + n.Topic,
         Message: string(jsonString),
     }
 

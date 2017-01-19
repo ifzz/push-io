@@ -41,11 +41,6 @@ func init() {
 func main() {
     //create a ClientOptions struct setting the broker address, clientid, turn
     //off trace output and set the default message handler
-    /*opts := MQTT.NewClientOptions().AddBroker("ws://54.223.124.84:80/mqtt")
-    opts.SetClientID("monitor")
-    opts.SetUsername("monitor")
-    opts.SetPassword("7C7DC73CDFAB3838C5E2CE82E1BFC")*/
-
     opts := MQTT.NewClientOptions()
     opts.AddBroker(config.MqttServer)
     opts.SetClientID(config.ClientId)
@@ -67,7 +62,5 @@ func main() {
         os.Exit(1)
     }
 
-    for t := range time.NewTicker(time.Minute).C {
-        fmt.Println(t)
-    }
+    select {}
 }

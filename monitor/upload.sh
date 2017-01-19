@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-for host in '54.223.22.37'
+for host in '54.223.22.37' '119.29.20.165'
 do
     echo $host
 

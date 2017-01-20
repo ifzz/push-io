@@ -10,7 +10,7 @@ type Config struct {
     Username string
     Password string
     MongoServer string
-    MongoPort int
+    //MongoPort int
     Debug bool
     MqttServer string
     MaxWorkers int
@@ -33,7 +33,7 @@ func NewConfig() *Config {
         Debug: viper.GetBool("debug"),
         MqttServer: viper.GetString("mqttServer"),
         MongoServer: viper.GetString("mongoServer"),
-        MongoPort: viper.GetInt("mongoPort"),
+        //MongoPort: viper.GetInt("mongoPort"),
         MaxWorkers: viper.GetInt("maxWorkers"),
         MaxQueue: viper.GetInt("maxQueue"),
     }

@@ -1,0 +1,10 @@
+{
+    "clientId": "monitor",
+    "username": "monitor",
+    "password": "92B57FEEBF7BE38B5D6ABE1C98D85",
+    "debug": true,
+    "mqttServer": "ws://119.29.28.42:80/mqtt",
+    "mongoServer": "10.2.68.215:27017",
+    "maxWorkers": 64,
+    "maxQueue": 1024
+}

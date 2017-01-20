@@ -4,8 +4,7 @@
     "password": "7C7DC73CDFAB3838C5E2CE82E1BFC",
     "debug": true,
     "mqttServer": "ws://54.223.124.84:80/mqtt",
-    "mongoServer": "10.71.128.73",
-    "mongoPort": 27017,
+    "mongoServer": "10.71.128.73:27017",
     "maxWorkers": 64,
     "maxQueue": 1024
 }

@@ -7,7 +7,7 @@ import (
 
 func NewMongoSession() *mgo.Session {
 
-    host := fmt.Sprintf("mongodb://%s:%d", config.MongoServer, config.MongoPort)
+    host := fmt.Sprintf("mongodb://%s", config.MongoServer)
 
     // Connect to our local mongo
     var err error

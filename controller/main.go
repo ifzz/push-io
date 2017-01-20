@@ -61,6 +61,7 @@ func main() {
         fmt.Println(token.Error())
         os.Exit(1)
     }
+    fmt.Println(time.Now(), "running...")
 
     select {}
 }

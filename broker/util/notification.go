@@ -7,20 +7,21 @@ import (
     "encoding/json"
     "net/http"
     "strings"
+    //"gopkg.in/mgo.v2/bson"
 )
 
 type Notification struct {
-    AppId       string `bson:"appId"`
-    AppKey      string `bson:"appKey"`
-    Id          string `bson:"id"`
-    Timestamp   int64 `bson:"timestamp"`
-    LastUpdated time.Time `bson:"lastUpdated"`
-    Qos         int `bson:"qos"`
-    Retain      int `bson:"retain"`
-    Topic       string `bson:"topic"`
-    Message     map[string]interface{} `bson:"message"`
-    Error       string `bson:"error"`
-    Ack         bool `bson:"ack"`
+    AppId       string `json:"appId" bson:"appId"`
+    AppKey      string `json:"-" bson:"appKey"`
+    Id          string `json:"id" bson:"id"`
+    Timestamp   int64 `json:"timestamp" bson:"timestamp"`
+    LastUpdated time.Time `json:"lastUpdated" bson:"lastUpdated"`
+    Qos         int `json:"-" bson:"qos"`
+    Retain      int `json:"-" bson:"retain"`
+    Topic       string `json:"topic" bson:"topic"`
+    Message     map[string]interface{} `json:"message" bson:"message"`
+    Error       string `json:"error" bson:"error"`
+    Ack         bool `json:"ack" bson:"ack"`
 }
 
 func (n *Notification) Save() error {
@@ -29,6 +30,31 @@ func (n *Notification) Save() error {
 
     c := s.DB("dolphin").C("notification")
     return c.Insert(n)
+}
+
+func Total() (int, error) {
+    s := session.Copy()
+    defer s.Close()
+
+    c := s.DB("dolphin").C("notification")
+
+    return c.Find(nil).Count()
+}
+
+func List(rows []Notification, page int, pageSize int) error {
+    s := session.Copy()
+    defer s.Close()
+
+    c := s.DB("dolphin").C("notification")
+
+    var results []Notification
+    err := c.Find(nil).Skip((page - 1) * pageSize).Limit(pageSize).
+        //Select(bson.M{"id": 1, "ack": 1, "message": 1, "appId": 1, "timestamp": 1, "error": 1, "topic": 1, "lastUpdated": 1}).
+        All(&results)
+
+    copy(rows, results)
+
+    return err
 }
 
 func (n *Notification) Notify() error {

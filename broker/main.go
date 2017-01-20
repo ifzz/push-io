@@ -54,8 +54,71 @@ func main() {
     // handle the notification request
     iris.Post("/api/v1/notification", notification)
 
+    iris.Get("/api/v1/message/:page/:pageSize", list)
+
     // listening on port 8080
     iris.Listen(":8080")
+}
+
+func list(ctx *iris.Context) {
+    page, err := ctx.ParamInt("page")
+    if err != nil {
+        ctx.JSON(iris.StatusInternalServerError, iris.Map{
+            "error": err,
+        })
+        return
+    }
+
+    pageSize, err := ctx.ParamInt("pageSize")
+    if err != nil {
+        ctx.JSON(iris.StatusInternalServerError, iris.Map{
+            "error": err,
+        })
+        return
+    }
+    if pageSize >= 100 {
+        ctx.JSON(iris.StatusInternalServerError, iris.Map{
+            "error": "page size should be 0 < pageSize < 100",
+        })
+        return
+    }
+
+    total, err := util.Total()
+    if err != nil {
+        ctx.JSON(iris.StatusInternalServerError, iris.Map{
+            "error": err,
+        })
+        return
+    }
+
+    if (total/pageSize + 1) < page {
+        ctx.JSON(iris.StatusOK, iris.Map{
+            "total": total,
+            "page": page,
+            "pageSize": pageSize,
+            "messages": nil,
+        })
+        return
+    }
+
+    size := total - (page-1) * pageSize
+    if size >= pageSize {
+        size = pageSize
+    }
+    rows := make([]util.Notification, size)
+    if err := util.List(rows, page, pageSize); err != nil {
+        ctx.JSON(iris.StatusInternalServerError, iris.Map{
+            "error": err,
+        })
+        return
+    }
+
+    ctx.JSON(iris.StatusOK, iris.Map{
+        "total": total,
+        "page": page,
+        "pageSize": pageSize,
+        "messages": rows,
+    })
 }
 
 func index(ctx *iris.Context) {

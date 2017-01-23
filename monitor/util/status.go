@@ -89,7 +89,23 @@ func save(node *Node) {
     }
 
     // save the status of node
-    if _, err := conn.Do("HMSET", fmt.Sprintf(BROKER_STATS, node.Address), FIELD_CLIENTS, node.Clients, FIELD_STATUS, node.ClusterStatus, FIELD_ADDRESS, node.Address); err != nil {
+    host := getPublicAddr(node.Address)
+    if _, err := conn.Do("HMSET", fmt.Sprintf(BROKER_STATS, host), FIELD_CLIENTS, node.Clients, FIELD_STATUS, node.ClusterStatus, FIELD_ADDRESS, node.Address); err != nil {
         fmt.Printf("error %+v\n", err)
     }
+}
+
+const CONFIG_PATH = "."
+const CONFIG_NAME = "ip"
+
+func getPublicAddr(ip string) string {
+    viper.SetConfigName(CONFIG_NAME)
+    viper.AddConfigPath(CONFIG_PATH)
+    err := viper.ReadInConfig()
+
+    if err != nil {
+        panic("IP configuration file not found")
+    }
+
+    return viper.GetString(ip)
 }

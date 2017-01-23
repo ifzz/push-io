@@ -38,11 +38,11 @@ unzip emqttd-docker-v2.0.zip
 
 sudo docker load < emqttd-docker-v2.0.6
 
-sudo docker run --restart=always -itd --net='host' -e EMQ_LOADED_PLUGINS="emq_recon,emq_dashboard,emq_mod_presence,emq_mod_retainer,emq_mod_subscription,emq_auth_username" -e 'EMQ_ALLOW_ANONYMOUS=false' -e 'EMQ_HTTP_PORT=80' -e 'EMQ_NAME=emqttd' -e 'EMQ_HOST=119.29.28.42'   --name emq emqttd-docker-v2.0.6
+sudo docker run --restart=always -itd --net='host' -e EMQ_LOADED_PLUGINS="emq_recon,emq_dashboard,emq_mod_presence,emq_mod_retainer,emq_mod_subscription,emq_auth_username" -e 'EMQ_ALLOW_ANONYMOUS=false' -e 'EMQ_HTTP_PORT=80' -e 'EMQ_NAME=emqttd' -e 'EMQ_HOST=10.71.2.74'   --name emq emqttd-docker-v2.0.6
 
-sudo docker run --restart=always -itd --net='host' -e EMQ_LOADED_PLUGINS="emq_recon,emq_dashboard,emq_mod_presence,emq_mod_retainer,emq_mod_subscription,emq_auth_username" -e 'EMQ_ALLOW_ANONYMOUS=false' -e 'EMQ_HTTP_PORT=80' -e 'EMQ_NAME=emqttd' -e 'EMQ_HOST=119.29.28.252'  --name emq emqttd-docker-v2.0.6
+sudo docker run --restart=always -itd --net='host' -e EMQ_LOADED_PLUGINS="emq_recon,emq_dashboard,emq_mod_presence,emq_mod_retainer,emq_mod_subscription,emq_auth_username" -e 'EMQ_ALLOW_ANONYMOUS=false' -e 'EMQ_HTTP_PORT=80' -e 'EMQ_NAME=emqttd' -e 'EMQ_HOST=	10.71.2.28'  --name emq emqttd-docker-v2.0.6
 
-./bin/emqttd_ctl cluster join emqttd@119.29.28.252
+./bin/emqttd_ctl cluster join emqttd@10.71.2.28
 
 ./bin/emqttd_ctl users add gftrader 1163CFFD87155CD634CBD3DA9F53D
 
@@ -55,3 +55,6 @@ curl -v --basic -u admin:public -k http://119.29.28.42:18083/api/nodes
 curl -v --basic -u admin:public -k http://119.29.28.252:18083/api/nodes
 
 curl -v --basic -u admin:public -k http://mqtt.gz.1251438792.clb.myqcloud.com:18083/api/nodes
+
+curl -XPOST 'http://push-it.gf.com.cn/api/v1/notification'  -H 'Content-Type:application/json' --data '{"appId":"gftrader","appKey":"1163CFFD87155CD634CBD3DA9F53D","topic": "mike","message":{"payload":{"广发证券":"涨停", "招商证券":"跌停"}}}'
+

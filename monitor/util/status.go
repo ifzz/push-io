@@ -95,12 +95,12 @@ func save(node *Node) {
     }
 }
 
-const CONFIG_PATH = "."
-const CONFIG_NAME = "ip"
+const IP_CONFIG_PATH = "."
+const IP_CONFIG_NAME = "ip"
 
 func getPublicAddr(ip string) string {
-    viper.SetConfigName(CONFIG_NAME)
-    viper.AddConfigPath(CONFIG_PATH)
+    viper.SetConfigName(IP_CONFIG_NAME)
+    viper.AddConfigPath(IP_CONFIG_PATH)
     err := viper.ReadInConfig()
 
     if err != nil {

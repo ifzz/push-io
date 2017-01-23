@@ -90,7 +90,7 @@ func save(node *Node) {
 
     // save the status of node
     host := getPublicAddr(node.Address)
-    if _, err := conn.Do("HMSET", fmt.Sprintf(BROKER_STATS, host), FIELD_CLIENTS, node.Clients, FIELD_STATUS, node.ClusterStatus, FIELD_ADDRESS, node.Address); err != nil {
+    if _, err := conn.Do("HMSET", fmt.Sprintf(BROKER_STATS, node.Address), FIELD_CLIENTS, node.Clients, FIELD_STATUS, node.ClusterStatus, FIELD_ADDRESS, host); err != nil {
         fmt.Printf("error %+v\n", err)
     }
 }

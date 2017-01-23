@@ -49,3 +49,9 @@ sudo docker run --restart=always -itd --net='host' -e EMQ_LOADED_PLUGINS="emq_re
 ./bin/emqttd_ctl users add gfnbop 988733B9DDB81E626E4A84D232676
 
 ./bin/emqttd_ctl users add monitor 92B57FEEBF7BE38B5D6ABE1C98D85
+
+curl -v --basic -u admin:public -k http://119.29.28.42:18083/api/nodes
+
+curl -v --basic -u admin:public -k http://119.29.28.252:18083/api/nodes
+
+curl -v --basic -u admin:public -k http://mqtt.gz.1251438792.clb.myqcloud.com:18083/api/nodes

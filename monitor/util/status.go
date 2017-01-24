@@ -15,6 +15,11 @@ type Node struct {
     Address string
     ClusterStatus string `json:"cluster_status"`
     Clients int
+    TotalMemory string `json:"total_memory"`
+    UsedMemory string `json:"used_memory"`
+    Load1 string `json:"load1"`
+    Load5 string `json:"load5"`
+    Load15 string `json:"load15"`
 }
 
 const API_NODES = "http://%s:%d/api/nodes"
@@ -30,6 +35,16 @@ const FIELD_CLIENTS = "clients"
 const FIELD_STATUS = "status"
 
 const FIELD_ADDRESS = "address"
+
+const FIELD_TOTAL_MEMORY = "total_memory"
+
+const FIELD_USED_MEMORY = "used_memory"
+
+const FIELD_LOAD_1 = "load1"
+
+const FIELD_LOAD_5 = "load5"
+
+const FIELD_LOAD_15 = "load15"
 
 func Update() {
     nodes := queryNodes()
@@ -87,10 +102,20 @@ func save(node *Node) {
     if _, err := conn.Do("sadd", BROKER_NODES, node.Address); err != nil {
         fmt.Printf("error %+v\n", err)
     }
+    fmt.Printf("%+v\n", *node)
 
     // save the status of node
     host := getPublicAddr(node.Address)
-    if _, err := conn.Do("HMSET", fmt.Sprintf(BROKER_STATS, node.Address), FIELD_CLIENTS, node.Clients, FIELD_STATUS, node.ClusterStatus, FIELD_ADDRESS, host); err != nil {
+    if _, err := conn.Do("HMSET", fmt.Sprintf(BROKER_STATS, node.Address),
+        FIELD_CLIENTS, node.Clients,
+        FIELD_STATUS, node.ClusterStatus,
+        FIELD_ADDRESS, host,
+        FIELD_TOTAL_MEMORY, node.TotalMemory,
+        FIELD_USED_MEMORY, node.UsedMemory,
+        FIELD_LOAD_1, node.Load1,
+        FIELD_LOAD_5, node.Load5,
+        FIELD_LOAD_15, node.Load15,
+    ); err != nil {
         fmt.Printf("error %+v\n", err)
     }
 }

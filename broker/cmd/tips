@@ -18,9 +18,9 @@ curl -v --basic -u admin:public -k http://54.223.124.84:18083/api/stats
 
 curl -v --basic -u gftrader:A98D8B1134D34F6E161463F757139 -k http://54.222.243.29:80/mqtt/publish -d 'qos=2&retain=1&topic=mike&message={"payload":"hello"}'
 
-curl -XPOST 'http://54.222.243.29:8080/api/v1/notification'  -H 'Content-Type:application/json' --data '{"appId":"gftrader","appKey":"A98D8B1134D34F6E161463F757139","topic": "mike","message":{"a":{"key":"value"}}}'
+curl -XPOST 'http://54.223.22.37/api/v1/notification'  -H 'Content-Type:application/json' --data '{"appId":"gftrader","appKey":"A98D8B1134D34F6E161463F757139","topic": "mike","message":{"a":{"key":"value"}}}'
 
-curl -XPOST 'http://54.222.243.29:8080/api/v1/notification'  -H 'Content-Type:application/json' --data '{"appId":"gftrader","appKey":"A98D8B1134D34F6E161463F757139","topic": "mike","message":{"a":{"key":"value"}}}'
+curl -XPOST 'http://54.223.22.37/api/v1/notification'  -H 'Content-Type:application/json' --data '{"appId":"gftrader","appKey":"A98D8B1134D34F6E161463F757139","topic": "mike","message":{"a":{"key":"value"}}}'
 
 curl -v --basic -u gftrader:A98D8B1134D34F6E161463F757139 -k http://54.223.124.84:80/mqtt/publish -d "qos=2&retain=1&topic=mike&message=hello"
 

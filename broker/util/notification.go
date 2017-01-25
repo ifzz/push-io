@@ -7,7 +7,6 @@ import (
     "encoding/json"
     "net/http"
     "strings"
-    //"gopkg.in/mgo.v2/bson"
 )
 
 type Notification struct {

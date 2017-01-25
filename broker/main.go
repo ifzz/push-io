@@ -1,12 +1,14 @@
 package main
 
 import (
+    "gopkg.in/alexcesaro/statsd.v2"
     "github.com/kataras/iris"
     "github.com/iris-contrib/middleware/cors"
     "github.com/iris-contrib/middleware/logger"
     "time"
     "github.com/satori/go.uuid"
     "./util"
+    "fmt"
 )
 
 var key = util.InitKey()
@@ -113,6 +115,8 @@ func list(ctx *iris.Context) {
         return
     }
 
+    increment("api.v1.message")
+
     ctx.JSON(iris.StatusOK, iris.Map{
         "total": total,
         "page": page,
@@ -168,6 +172,8 @@ func notification(ctx *iris.Context) {
     }
     jobQueue <- job
 
+    increment("api.v1.notification")
+
     ctx.Text(iris.StatusOK, "ok")
 }
 
@@ -178,4 +184,15 @@ func isAuthorized(appId string, appKey string) bool {
         }
     }
     return false
+}
+
+func increment(text string) {
+    c, err := statsd.New(statsd.Address(config.StatsdServer))
+    if err != nil {
+        fmt.Printf("fail to initialize statsd %+v\n", err)
+    } else {
+        // Increment a counter.
+        c.Increment(text)
+    }
+    defer c.Close()
 }

@@ -1,0 +1,12 @@
+{
+    "username": "admin",
+    "password": "public",
+    "debug": true,
+    "pushServer": "http://mqtt.gz.1251438792.clb.myqcloud.com/mqtt/publish",
+    "maxWorkers": 64,
+    "maxQueue": 1024,
+    "mongoServer": "10.2.68.215",
+    "mongoPort": 27017,
+    "ttl": 720,
+    "statsdServer": "10.35.89.23:8152"
+}

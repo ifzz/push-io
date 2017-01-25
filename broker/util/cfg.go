@@ -9,14 +9,15 @@ import (
 const CONFIG_PATH = "./config.json"
 
 type Config struct {
-    Username   string
-    Password   string
-    Debug      bool
-    PushServer string
-    MaxWorkers int
-    MaxQueue   int
+    Username    string
+    Password    string
+    Debug       bool
+    PushServer  string
+    MaxWorkers  int
+    MaxQueue    int
     MongoServer string
-    MongoPort int
+    MongoPort   int
+    TTL         int
 }
 
 func InitConfig() *Config {

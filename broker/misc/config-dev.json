@@ -6,5 +6,6 @@
     "maxWorkers": 64,
     "maxQueue": 1024,
     "mongoServer": "10.71.128.73",
-    "mongoPort": 27017
+    "mongoPort": 27017,
+    "ttl": 720
 }

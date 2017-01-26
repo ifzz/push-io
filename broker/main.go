@@ -115,7 +115,7 @@ func list(ctx *iris.Context) {
         return
     }
 
-    increment("api.v1.message")
+    increment("dolphin.api.v1.message")
 
     ctx.JSON(iris.StatusOK, iris.Map{
         "total": total,
@@ -172,7 +172,7 @@ func notification(ctx *iris.Context) {
     }
     jobQueue <- job
 
-    increment("api.v1.notification")
+    increment("dolphin.api.v1.notification")
 
     ctx.Text(iris.StatusOK, "ok")
 }

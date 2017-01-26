@@ -29,7 +29,7 @@ var f MQTT.MessageHandler = func(client MQTT.Client, msg MQTT.Message) {
     }
     jobQueue <- job
 
-    increment("topic.ack")
+    increment("dolphin.topic.ack")
 }
 
 var config = util.NewConfig()

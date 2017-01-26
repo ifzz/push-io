@@ -22,3 +22,5 @@ module.exports.ADMIN_CREDENTIALS = [
         pass: '988733B9DDB81E626E4A84D232676'
     }
 ];
+
+module.exports.STATSD_HOST = '10.71.0.8:8125';

@@ -15,6 +15,8 @@ var bluebird = require('bluebird');
 var client = redis.createClient(config.REDIS_PORT, config.REDIS_HOST, config.REDIS_OPTIONS);
 var auth = require('basic-auth');
 var _ = require('lodash');
+var StatsD = require('node-statsd');
+var std = new StatsD(config.STATSD_HOST);
 
 const BROKER_NODES = 'io.gf.com.cn:nodes';
 const PREFIX_STATS = 'io.gf.com.cn:stats:';
@@ -33,6 +35,8 @@ bluebird.promisifyAll(redis.Multi.prototype);
 /* GET home page. */
 // query which server is available
 router.get('/server', function(req, res) {
+    std.increment('dolphin.api.v1.server');
+
     var credentials = auth(req);
     //logger.debug(JSON.stringify(credentials));
     if (!credentials) {
@@ -81,6 +85,8 @@ router.get('/server', function(req, res) {
 });
 
 router.get('/nodes', function (req, res) {
+    std.increment('dolphin.api.v1.nodes');
+
     client.smembersAsync(BROKER_NODES)
         .then(function (nodes) {
             var stats = [];

@@ -58,3 +58,4 @@ curl -v --basic -u admin:public -k http://mqtt.gz.1251438792.clb.myqcloud.com:18
 
 curl -XPOST 'http://push-it.gf.com.cn/api/v1/notification'  -H 'Content-Type:application/json' --data '{"appId":"gftrader","appKey":"1163CFFD87155CD634CBD3DA9F53D","topic": "mike","message":{"payload":{"广发证券":"涨停", "招商证券":"跌停"}}}'
 
+curl -v --basic -u gftrader:1163CFFD87155CD634CBD3DA9F53D -k http://dolphin.gz.1251438792.clb.myqcloud.com/api/v1/server

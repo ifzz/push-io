@@ -1,6 +1,7 @@
 package util
 
 import (
+    "gopkg.in/alexcesaro/statsd.v2"
     "github.com/parnurzeal/gorequest"
     "fmt"
     "strings"
@@ -8,6 +9,7 @@ import (
     "encoding/json"
     "github.com/spf13/viper"
     "bytes"
+    "strconv"
 )
 
 type Node struct {
@@ -118,6 +120,14 @@ func save(node *Node) {
     ); err != nil {
         fmt.Printf("error %+v\n", err)
     }
+
+    gauge(host, FIELD_CLIENTS, node.Clients)
+    gauge(host, FIELD_STATUS, node.ClusterStatus)
+    gauge(host, FIELD_LOAD_1, node.Load1)
+    gauge(host, FIELD_LOAD_5, node.Load5)
+    gauge(host, FIELD_LOAD_15, node.Load15)
+    gauge(host, FIELD_TOTAL_MEMORY, node.TotalMemory)
+    gauge(host, FIELD_USED_MEMORY, node.UsedMemory)
 }
 
 const IP_CONFIG_PATH = "."
@@ -133,4 +143,54 @@ func getPublicAddr(ip string) string {
     }
 
     return viper.GetString(ip)
+}
+
+func gauge(host string, field string, value interface{}) {
+    c, err := statsd.New(statsd.Address(config.StatsdServer))
+    if err != nil {
+        fmt.Printf("fail to initialize statsd %+v\n", err)
+    } else {
+        // Increment a counter.
+        c.Gauge("dolphin." + convert(host) + "." + field, toValue(field, value))
+    }
+    defer c.Close()
+}
+
+func convert(text string) string {
+    return strings.Replace(text, ".", "_", -1)
+}
+
+func toValue(field string, text interface{}) int {
+    if field == FIELD_STATUS {
+        if text == "Running" {
+            return 1
+        } else {
+            return 0
+        }
+    }
+
+    if field == FIELD_LOAD_1 || field == FIELD_LOAD_5 || field == FIELD_LOAD_15 {
+        value, err := strconv.ParseFloat(text.(string), 32)
+        if err != nil {
+            fmt.Printf("fail to parse field [load 1/5/15], %+v\n", err)
+        } else {
+            return int(value * 100)
+        }
+    }
+
+    if field == FIELD_TOTAL_MEMORY || field == FIELD_USED_MEMORY {
+        valueText := strings.Replace(text.(string), "M", "", -1)
+        value, err := strconv.ParseFloat(valueText, 32)
+        if err != nil {
+            fmt.Printf("fail to parse field [total/used memory], %+v\n", err)
+        } else {
+            return int(value)
+        }
+    }
+
+    if field == FIELD_CLIENTS {
+        return text.(int)
+    }
+
+    return -1
 }

@@ -8,5 +8,5 @@
     "mongoServer": "10.71.128.73",
     "mongoPort": 27017,
     "ttl": 720,
-    "statsdServer": "127.0.0.1:8152"
+    "statsdServer": "127.0.0.1:8125"
 }

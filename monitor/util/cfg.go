@@ -15,6 +15,7 @@ type Config struct {
     Username string
     Password string
     Proxy string
+    StatsdServer string
 }
 
 func NewConfig() *Config {
@@ -34,5 +35,6 @@ func NewConfig() *Config {
         Username: viper.GetString("username"),
         Password: viper.GetString("password"),
         Proxy: viper.GetString("proxy"),
+        StatsdServer: viper.GetString("statsdServer"),
     }
 }

@@ -7,5 +7,5 @@
     "mongoServer": "127.0.0.1:27017",
     "maxWorkers": 64,
     "maxQueue": 1024,
-    "statsdServer": "127.0.0.1:8152"
+    "statsdServer": "127.0.0.1:8125"
 }

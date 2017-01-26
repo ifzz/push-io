@@ -15,6 +15,7 @@ type Config struct {
     MqttServer string
     MaxWorkers int
     MaxQueue   int
+    StatsdServer string
 }
 
 func NewConfig() *Config {
@@ -36,5 +37,6 @@ func NewConfig() *Config {
         //MongoPort: viper.GetInt("mongoPort"),
         MaxWorkers: viper.GetInt("maxWorkers"),
         MaxQueue: viper.GetInt("maxQueue"),
+        StatsdServer: viper.GetString("statsdServer"),
     }
 }

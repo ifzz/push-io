@@ -2,6 +2,7 @@ package main
 
 import (
     "fmt"
+    "gopkg.in/alexcesaro/statsd.v2"
     //import the Paho Go MQTT library
     MQTT "github.com/eclipse/paho.mqtt.golang"
     "os"
@@ -27,6 +28,8 @@ var f MQTT.MessageHandler = func(client MQTT.Client, msg MQTT.Message) {
         },
     }
     jobQueue <- job
+
+    increment("topic.ack")
 }
 
 var config = util.NewConfig()
@@ -64,4 +67,15 @@ func main() {
     fmt.Println(time.Now(), "running...")
 
     select {}
+}
+
+func increment(text string) {
+    c, err := statsd.New(statsd.Address(config.StatsdServer))
+    if err != nil {
+        fmt.Printf("fail to initialize statsd %+v\n", err)
+    } else {
+        // Increment a counter.
+        c.Increment(text)
+    }
+    defer c.Close()
 }

@@ -11,7 +11,7 @@ var config *util.Config
 
 func init() {
     config = util.NewConfig()
-    fmt.Printf("%+v\n", config)
+    fmt.Printf("%+v\n", *config)
 }
 
 func main() {

@@ -19,7 +19,7 @@ func main() {
     for t := range time.NewTicker(time.Minute).C {
         fmt.Println(t)
         util.Update()
-        increment("dolphin.monitor.update")
+        gauge("dolphin.monitor.service", 1)
     }
 }
 
@@ -30,6 +30,17 @@ func increment(text string) {
     } else {
         // Increment a counter.
         c.Increment(text)
+    }
+    defer c.Close()
+}
+
+func gauge(key string, value interface{}) {
+    c, err := statsd.New(statsd.Address(config.StatsdServer))
+    if err != nil {
+        fmt.Printf("fail to initialize statsd %+v\n", err)
+    } else {
+        // Increment a counter.
+        c.Gauge(key, value)
     }
     defer c.Close()
 }

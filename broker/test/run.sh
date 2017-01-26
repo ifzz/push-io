@@ -2,7 +2,7 @@
 
 START_TIME=$SECONDS
 
-for i in {1..1000}
+for i in {1..1024}
 do
     echo $i
 
@@ -22,7 +22,7 @@ do
 
     printf "\n\n"
 
-    sleep 1
+    #sleep 1
 done
 
 ELAPSED_TIME=$(($SECONDS - $START_TIME))

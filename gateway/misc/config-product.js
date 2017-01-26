@@ -23,4 +23,6 @@ module.exports.ADMIN_CREDENTIALS = [
     }
 ];
 
-module.exports.STATSD_HOST = '10.71.0.8:8125';
+module.exports.STATSD_HOST = '10.71.0.8';
+
+module.exports.STATSD_PORT = 8125;

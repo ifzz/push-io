@@ -16,7 +16,7 @@ var client = redis.createClient(config.REDIS_PORT, config.REDIS_HOST, config.RED
 var auth = require('basic-auth');
 var _ = require('lodash');
 var StatsD = require('node-statsd');
-var std = new StatsD(config.STATSD_HOST);
+var std = new StatsD({host: config.STATSD_HOST, port: config.STATSD_PORT});
 
 const BROKER_NODES = 'io.gf.com.cn:nodes';
 const PREFIX_STATS = 'io.gf.com.cn:stats:';

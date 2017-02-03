@@ -1,7 +1,7 @@
 {
     "username": "admin",
     "password": "public",
-    "debug": true,
+    "debug": false,
     "pushServer": "http://mqtt.gz.1251438792.clb.myqcloud.com/mqtt/publish",
     "maxWorkers": 64,
     "maxQueue": 1024,

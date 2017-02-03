@@ -1,4 +1,4 @@
-dev env : aws cloud
+DEV ENV : aws cloud
 
 sudo docker run --restart=always -itd --net='host' -e EMQ_LOADED_PLUGINS="emq_recon,emq_dashboard,emq_mod_presence,emq_mod_retainer,emq_mod_subscription,emq_auth_username" -e 'EMQ_ALLOW_ANONYMOUS=false' -e 'EMQ_HTTP_PORT=80' -e 'EMQ_NAME=emqttd' -e 'EMQ_HOST=54.222.243.29'  --name emq docker-aws.gf.com.cn/emq:latest
 
@@ -20,17 +20,14 @@ curl -v --basic -u gftrader:A98D8B1134D34F6E161463F757139 -k http://54.222.243.2
 
 curl -XPOST 'http://54.223.22.37/api/v1/notification'  -H 'Content-Type:application/json' --data '{"appId":"gftrader","appKey":"A98D8B1134D34F6E161463F757139","topic": "mike","message":{"a":{"key":"value"}}}'
 
-curl -XPOST 'http://54.223.22.37/api/v1/notification'  -H 'Content-Type:application/json' --data '{"appId":"gftrader","appKey":"A98D8B1134D34F6E161463F757139","topic": "mike","message":{"a":{"key":"value"}}}'
-
 curl -v --basic -u gftrader:A98D8B1134D34F6E161463F757139 -k http://54.223.124.84:80/mqtt/publish -d "qos=2&retain=1&topic=mike&message=hello"
-
 
 curl -v --basic -u admin:public -k http://54.223.124.84:18083/api/nodes
 
 
+========================================================================================================================================================================================================================================================================================================================================
 
-
-product env : qq cloud
+PRODUCT ENV : qq cloud
 
 wget -O emqttd-docker-v2.0.zip http://emqtt.com/downloads/latest/docker
 

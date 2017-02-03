@@ -16,6 +16,7 @@ type Config struct {
     Password string
     Proxy string
     StatsdServer string
+    Debug bool
 }
 
 func NewConfig() *Config {
@@ -36,5 +37,6 @@ func NewConfig() *Config {
         Password: viper.GetString("password"),
         Proxy: viper.GetString("proxy"),
         StatsdServer: viper.GetString("statsdServer"),
+        Debug: viper.GetBool("debug"),
     }
 }

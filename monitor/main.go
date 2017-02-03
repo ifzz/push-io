@@ -35,6 +35,9 @@ func increment(text string) {
 }
 
 func gauge(key string, value interface{}) {
+    if config.Debug {
+        return
+    }
     c, err := statsd.New(statsd.Address(config.StatsdServer))
     if err != nil {
         fmt.Printf("fail to initialize statsd %+v\n", err)

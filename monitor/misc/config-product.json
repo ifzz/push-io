@@ -6,5 +6,6 @@
     "username": "admin",
     "password": "public",
     "proxy": "",
-    "statsdServer": "10.71.0.8:8125"
+    "statsdServer": "10.71.0.8:8125",
+    "debug": false
 }

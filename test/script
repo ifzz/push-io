@@ -26,6 +26,7 @@ curl -v --basic -u gftrader:A98D8B1134D34F6E161463F757139 -k http://54.223.124.8
 
 curl -v --basic -u admin:public -k http://54.223.124.84:18083/api/nodes
 
+curl http://54.223.22.37/api/v1/application
 
 ========================================================================================================================================================================================================================================================================================================================================
 
@@ -58,3 +59,5 @@ curl -v --basic -u admin:public -k http://mqtt.gz.1251438792.clb.myqcloud.com:18
 curl -XPOST 'http://push-it.gf.com.cn/api/v1/notification'  -H 'Content-Type:application/json' --data '{"appId":"gftrader","appKey":"1163CFFD87155CD634CBD3DA9F53D","topic": "mike","message":{"payload":{"广发证券":"涨停", "招商证券":"跌停"}}}'
 
 curl -v --basic -u gftrader:1163CFFD87155CD634CBD3DA9F53D -k http://dolphin.gz.1251438792.clb.myqcloud.com/api/v1/server
+
+curl http://push-it.gf.com.cn/api/v1/application

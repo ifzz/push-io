@@ -7,6 +7,7 @@ import (
     "encoding/json"
     "net/http"
     "strings"
+    "gopkg.in/mgo.v2/bson"
 )
 
 type Notification struct {
@@ -46,14 +47,30 @@ func List(rows []Notification, page int, pageSize int) error {
 
     c := s.DB("dolphin").C("notification")
 
-    var results []Notification
+    var result []Notification
     err := c.Find(nil).Skip((page - 1) * pageSize).Limit(pageSize).
         //Select(bson.M{"id": 1, "ack": 1, "message": 1, "appId": 1, "timestamp": 1, "error": 1, "topic": 1, "lastUpdated": 1}).
-        All(&results)
+        All(&result)
 
-    copy(rows, results)
+    copy(rows, result)
 
     return err
+}
+
+func Application() ([]string, error) {
+    s := session.Copy()
+    defer s.Close()
+
+    c := s.DB("dolphin").C("notification")
+    var result []string
+
+    err := c.Find(nil).Select(bson.M{"appId": 1}).Distinct("appId", &result)
+
+    rows := make([]string, len(result))
+
+    copy(rows, result)
+
+    return rows, err
 }
 
 func (n *Notification) Notify() error {

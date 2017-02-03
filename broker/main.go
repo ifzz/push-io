@@ -56,13 +56,33 @@ func main() {
     // handle the notification request
     iris.Post("/api/v1/notification", notification)
 
-    iris.Get("/api/v1/message/:page/:pageSize", list)
+    iris.Get("/api/v1/message/:page/:pageSize", message)
+
+    iris.Get("/api/v1/application", application)
 
     // listening on port 8080
     iris.Listen(":8080")
 }
 
-func list(ctx *iris.Context) {
+func application(ctx *iris.Context) {
+    var rows []string
+    var err error
+
+    if rows, err = util.Application(); err != nil {
+        ctx.JSON(iris.StatusInternalServerError, iris.Map{
+            "error": err,
+        })
+        return
+    }
+
+    increment("dolphin.api.v1.application")
+
+    ctx.JSON(iris.StatusOK, iris.Map{
+        "applications": rows,
+    })
+}
+
+func message(ctx *iris.Context) {
     page, err := ctx.ParamInt("page")
     if err != nil {
         ctx.JSON(iris.StatusInternalServerError, iris.Map{

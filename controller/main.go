@@ -70,6 +70,9 @@ func main() {
 }
 
 func increment(text string) {
+    if config.Debug {
+        return
+    }
     c, err := statsd.New(statsd.Address(config.StatsdServer))
     if err != nil {
         fmt.Printf("fail to initialize statsd %+v\n", err)

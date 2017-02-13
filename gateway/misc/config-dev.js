@@ -20,6 +20,10 @@ module.exports.ADMIN_CREDENTIALS = [
     {
         name: 'gfnbop',
         pass: 'B67844FC337D8FDAB3D21A45114CB'
+    },
+    {
+        name: 'demo',
+        pass: 'demo'
     }
 ];
 

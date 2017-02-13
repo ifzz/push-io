@@ -12,6 +12,8 @@ sudo docker run --restart=always -itd --net='host' -e EMQ_LOADED_PLUGINS="emq_re
 
 ./bin/emqttd_ctl users add monitor 7C7DC73CDFAB3838C5E2CE82E1BFC
 
+./bin/emqttd_ctl users add demo demo
+
 curl -v --basic -u admin:public -k http://54.222.243.29:18083/api/stats
 
 curl -v --basic -u admin:public -k http://54.223.124.84:18083/api/stats

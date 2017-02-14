@@ -14,8 +14,8 @@ do
 
     #printf "\n\n"
 
-    #curl -XPOST 'http://push-it.gf.com.cn/api/v1/notification'  -H 'Content-Type:application/json' --data '{"appId":"gftrader","appKey":"1163CFFD87155CD634CBD3DA9F53D","topic": "mike","message":{"payload":{"广发证券":"涨停", "招商证券":"跌停"}}}'
-    curl -XPOST 'http://54.223.22.37/api/v1/notification'  -H 'Content-Type:application/json' --data '{"appId":"demo","appKey":"demo","topic": "test","message":{"msg":{"top":"123"}, "type":"quoteStock"}}'
+    curl -XPOST 'http://push-it.gf.com.cn/api/v1/notification'  -H 'Content-Type:application/json' --data '{"appId":"gftrader","appKey":"1163CFFD87155CD634CBD3DA9F53D","topic": "mike","message":{"payload":{"广发证券":"涨停", "招商证券":"跌停"}}}'
+    #curl -XPOST 'http://54.223.22.37/api/v1/notification'  -H 'Content-Type:application/json' --data '{"appId":"demo","appKey":"demo","topic": "test","message":{"msg":{"top":"123"}, "type":"quoteStock"}}'
 
     printf "\n\n"
 

@@ -24,6 +24,8 @@ curl -XPOST 'http://54.223.22.37/api/v1/notification'  -H 'Content-Type:applicat
 
 curl -XPOST 'http://54.223.22.37/api/v1/notification'  -H 'Content-Type:application/json' --data '{"appId":"gftrader","appKey":"A98D8B1134D34F6E161463F757139","topic": "BROADCAST/SYS/NOTIFICATION","message":{"title": "happy new year", "content": "hello world"}}'
 
+curl -XPOST 'http://54.223.22.37/api/v1/notification'  -H 'Content-Type:application/json' --data '{"appId":"demo","appKey":"demo","topic": "test","message":{"msg":{"top":"123"}, "type":"quoteStock"}}'
+
 curl -v --basic -u gftrader:A98D8B1134D34F6E161463F757139 -k http://54.223.124.84:80/mqtt/publish -d "qos=2&retain=1&topic=mike&message=hello"
 
 curl -v --basic -u admin:public -k http://54.223.124.84:18083/api/nodes

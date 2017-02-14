@@ -16,6 +16,7 @@ type Config struct {
     MaxWorkers int
     MaxQueue   int
     StatsdServer string
+    TTL int
 }
 
 func NewConfig() *Config {
@@ -38,5 +39,6 @@ func NewConfig() *Config {
         MaxWorkers: viper.GetInt("maxWorkers"),
         MaxQueue: viper.GetInt("maxQueue"),
         StatsdServer: viper.GetString("statsdServer"),
+        TTL: viper.GetInt("ttl"),
     }
 }

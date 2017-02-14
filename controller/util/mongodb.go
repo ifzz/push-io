@@ -3,6 +3,7 @@ package util
 import (
     "gopkg.in/mgo.v2"
     "fmt"
+    "time"
 )
 
 func NewMongoSession() *mgo.Session {
@@ -18,9 +19,18 @@ func NewMongoSession() *mgo.Session {
         panic(err)
     }
 
-    c := session.DB("dolphin").C("notification")
-    // Index
+    c := session.DB("dolphin").C("ack")
+
     index := mgo.Index{
+        Key: []string{"lastUpdated"},
+        ExpireAfter: time.Duration(config.TTL) * time.Hour,
+    }
+    if err := c.EnsureIndex(index); err != nil {
+        panic(err)
+    }
+
+    // Index
+    index = mgo.Index{
         Key:        []string{"id"},
         Unique:     true,
         DropDups:   true,

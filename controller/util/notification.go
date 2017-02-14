@@ -1,5 +1,6 @@
 package util
 
+/*
 import (
     "time"
     "gopkg.in/mgo.v2/bson"
@@ -37,3 +38,4 @@ func (n *Notification) PushAck() error {
 
     return c.Update(query, change)
 }
+*/

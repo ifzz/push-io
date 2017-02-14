@@ -16,14 +16,14 @@ var f MQTT.MessageHandler = func(client MQTT.Client, msg MQTT.Message) {
     fmt.Printf("MSG: %s\n", msg.Payload())
     now := time.Now()
     job := util.Job{
-        Payload: &util.Notification{
+        Payload: &util.Ack{
             Id: string(msg.Payload()),
             LastUpdated: now,
             Timestamp: now.Unix(),
         },
         Do: func(action util.Action) {
-            if err := action.PushAck(); err != nil {
-                fmt.Printf("fail to handle push ack event %+v, error %+v\n", action, err)
+            if err := action.Acknowledge(); err != nil {
+                fmt.Printf("fail to acknowledge %+v, error %+v\n", action, err)
             }
         },
     }

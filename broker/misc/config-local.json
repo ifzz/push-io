@@ -7,6 +7,6 @@
     "maxQueue": 1024,
     "mongoServer": "127.0.0.1",
     "mongoPort": 27017,
-    "ttl": 720,
+    "ttl": 240,
     "statsdServer": "127.0.0.1:8125"
 }

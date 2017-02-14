@@ -2,7 +2,7 @@
     "username": "admin",
     "password": "public",
     "debug": false,
-    "pushServer": "http://mqtt.gz.1251438792.clb.myqcloud.com/mqtt/publish",
+    "pushServer": "http://119.29.28.42:80/mqtt/publish",
     "maxWorkers": 64,
     "maxQueue": 1024,
     "mongoServer": "10.2.68.215",

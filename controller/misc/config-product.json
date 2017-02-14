@@ -5,7 +5,7 @@
     "debug": false,
     "mqttServer": "ws://119.29.28.42:80/mqtt",
     "mongoServer": "10.2.68.215:27017",
-    "maxWorkers": 64,
+    "maxWorkers": 32,
     "maxQueue": 1024,
     "statsdServer": "10.35.89.23:8125",
     "ttl": 240

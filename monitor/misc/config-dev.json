@@ -1,7 +1,7 @@
 {
     "redisHost": "10.71.128.73",
     "redisPort": 6379,
-    "brokerHost": "10.71.128.145",
+    "brokerHost": "10.71.128.85",
     "brokerPort": 18083,
     "username": "admin",
     "password": "public",

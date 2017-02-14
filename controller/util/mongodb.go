@@ -29,20 +29,6 @@ func NewMongoSession() *mgo.Session {
         panic(err)
     }
 
-    // Index
-    index = mgo.Index{
-        Key:        []string{"id"},
-        Unique:     true,
-        DropDups:   true,
-        Background: true,
-        Sparse:     true,
-    }
-
-    err = c.EnsureIndex(index)
-    if err != nil {
-        panic(err)
-    }
-
     session.SetMode(mgo.Monotonic, true)
 
     return session

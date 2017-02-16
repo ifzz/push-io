@@ -3,7 +3,7 @@
     "password": "public",
     "debug": false,
     "pushServer": "http://119.29.28.42:80/mqtt/publish",
-    "maxWorkers": 32,
+    "maxWorkers": 16,
     "maxQueue": 1024,
     "mongoServer": "10.2.68.215",
     "mongoPort": 27017,

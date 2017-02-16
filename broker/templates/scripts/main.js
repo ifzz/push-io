@@ -3,6 +3,31 @@
  */
 
 $(function (){
+
+    $('#signInBtn').click(function (event) {
+
+        var username = $('#inputUsername').val();
+        var password = $('#inputPassword').val();
+
+        $.ajax({
+            type: "POST",
+            url: '/api/v1/login',
+            data: JSON.stringify({
+                username: username,//'gftrader',
+                password: password,//'A98D8B1134D34F6E161463F757139'
+            }),
+            success: function (data, textStatus) {
+                console.log(textStatus);
+                $('#loginForm').hide();
+                $('#messageForm').show();
+            },
+            contentType: 'application/json',
+            dataType: 'json'
+        });
+
+        event.preventDefault();
+    });
+
     $('#target').submit(function (event) {
         var topic = $('#inputTopic').val();
         var text = $('#inputText').val();

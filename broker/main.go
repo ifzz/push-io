@@ -53,6 +53,8 @@ func main() {
     // show the console web page
     iris.Get("/", index)
 
+    iris.Post("/api/v1/login", login)
+
     // handle the notification request
     iris.Post("/api/v1/notification", notification)
 
@@ -62,6 +64,26 @@ func main() {
 
     // listening on port 8080
     iris.Listen(":8080")
+}
+
+func login(ctx *iris.Context) {
+    type Account struct {
+        Username string `json:"username"`
+        Password string `json:"password"`
+    }
+    data := &Account{}
+    if err := ctx.ReadJSON(data); err != nil {
+        ctx.Log("%+v\n", err)
+        ctx.EmitError(iris.StatusInternalServerError)
+        return
+    }
+    if (!isAuthorized(data.Username, data.Password)) {
+        ctx.EmitError(iris.StatusUnauthorized)
+        return
+    }
+    ctx.JSON(iris.StatusOK, iris.Map{
+        "status": "success",
+    })
 }
 
 func application(ctx *iris.Context) {

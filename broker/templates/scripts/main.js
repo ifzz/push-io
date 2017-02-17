@@ -23,10 +23,14 @@ $(function (){
                 console.log(textStatus);
                 $('#loginForm').hide();
                 $('#messageForm').show();
+                $('#successText').text('登录成功');
+                $("#success").delay(200).addClass("in").fadeOut(2000);
             },
             error: function (xhr, textStatus, error) {
                 "use strict";
-                alert(textStatus + ': ' + error);
+                //alert(textStatus + ': ' + error);
+                $('#warningText').text('登录失败');
+                $("#warning").delay(200).addClass("in").fadeOut(2000);
             },
             contentType: 'application/json',
             dataType: 'json'
@@ -38,6 +42,7 @@ $(function (){
     $('#target').submit(function (event) {
         var topic = $('#inputTopic').val();
         var text = $('#inputText').val();
+        var type = $('#inputType').val();
 
         $.ajax({
             type: "POST",
@@ -45,14 +50,19 @@ $(function (){
             data: JSON.stringify({
                 topic: topic,
                 message: {
-                    'content': text
+                    'msg': text,
+                    'type': type,
                 },
                 appId: username,
                 appKey: password,
             }),
             success: function (data, textStatus) {
                 console.log(textStatus);
+                $('#successText').text('发送成功');
+                $('#success').fadeIn(50);
+                $("#success").delay(200).addClass("in").fadeOut(2000);
             },
+            error: function (xhr, textStatus, error) {alert(textStatus + ': ' + error);},
             contentType: 'application/json',
             dataType: 'json'
         });

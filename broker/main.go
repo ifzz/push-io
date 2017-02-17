@@ -216,7 +216,10 @@ func notification(ctx *iris.Context) {
 
     increment("dolphin.api.v1.notification")
 
-    ctx.Text(iris.StatusOK, "ok")
+    //ctx.Text(iris.StatusOK, "ok")
+    ctx.JSON(iris.StatusOK, iris.Map{
+        "status": "success",
+    })
 }
 
 func isAuthorized(appId string, appKey string) bool {

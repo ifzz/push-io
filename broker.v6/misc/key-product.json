@@ -1,0 +1,6 @@
+{
+    "apps": [
+        {"appId": "gftrader", "appKey": "1163CFFD87155CD634CBD3DA9F53D", "appSecret": ""},
+        {"appId": "gfnbop", "appKey": "988733B9DDB81E626E4A84D232676", "appSecret": ""}
+    ]
+}

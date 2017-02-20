@@ -4,7 +4,7 @@ for host in '54.223.22.37'
 do
     echo $host
 
-    scp ./main  ubuntu@$host:/home/ubuntu/push-io/broker/
+    scp ./main  ubuntu@$host:/home/ubuntu/push-io/broker.v6/
 done
 
 
@@ -12,5 +12,5 @@ done
 #do
 #    echo $host
 #
-#    scp ./main  gf@$host:/home/gf/push-io/broker/
+#    scp ./main  gf@$host:/home/gf/push-io/broker.v6/
 #done

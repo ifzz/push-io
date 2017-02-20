@@ -8,9 +8,9 @@ do
 done
 
 
-for host in '10.2.68.215' '10.35.68.215'
-do
-    echo $host
-
-    scp ./main  gf@$host:/home/gf/push-io/broker/
-done
+#for host in '10.2.68.215' '10.35.68.215'
+#do
+#    echo $host
+#
+#    scp ./main  gf@$host:/home/gf/push-io/broker/
+#done

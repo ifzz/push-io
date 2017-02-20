@@ -30,7 +30,7 @@ func main() {
     app.Adapt(view.HTML("./templates", ".html"))
 
     app.StaticWeb("/scripts", "./templates/scripts/")
-    app.StaticWeb("/styles",  "./templates/styles")
+    app.StaticWeb("/styles",  "./templates/styles/")
 
     app.Get("/", index)
     app.Post("/api/v1/login", login)

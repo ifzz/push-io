@@ -27,22 +27,15 @@ func main() {
 
     app.Adapt(iris.DevLogger())
     app.Adapt(httprouter.New())
-
     app.Adapt(view.HTML("./templates", ".html"))
+
     app.StaticWeb("/scripts", "./templates/scripts/")
     app.StaticWeb("/styles",  "./templates/styles")
 
-    // HTTP Method: GET
-    // PATH: http://127.0.0.1/
-    // Handler(s): index
     app.Get("/", index)
-
     app.Post("/api/v1/login", login)
-
     app.Post("/api/v1/notification", notification)
-
     app.Get("/api/v1/message/:page/:pageSize", message)
-
     app.Get("/api/v1/application", application)
 
     app.Listen(":8080")
@@ -59,14 +52,18 @@ func login(ctx *iris.Context) {
     }
     data := &Account{}
     if err := ctx.ReadJSON(data); err != nil {
-        fmt.Errorf("%+v\n", err)
-        ctx.EmitError(iris.StatusInternalServerError)
+        ctx.JSON(iris.StatusInternalServerError, iris.Map{
+            "error": err,
+        })
         return
     }
     if (!isAuthorized(data.Username, data.Password)) {
-        ctx.EmitError(iris.StatusUnauthorized)
+        ctx.JSON(iris.StatusUnauthorized, iris.Map{
+            "error": "wrong username or password",
+        })
         return
     }
+    increment("dolphin.api.v1.login")
     ctx.JSON(iris.StatusOK, iris.Map{
         "status": "success",
     })
@@ -81,13 +78,15 @@ func notification(ctx *iris.Context) {
     }
     data := &Data{}
     if err := ctx.ReadJSON(data); err != nil {
-        fmt.Errorf("%+v\n", err)
-        ctx.EmitError(iris.StatusInternalServerError)
+        ctx.JSON(iris.StatusInternalServerError, iris.Map{
+            "error": err,
+        })
         return
     }
-
     if (!isAuthorized(data.AppId, data.AppKey)) {
-        ctx.EmitError(iris.StatusUnauthorized)
+        ctx.JSON(iris.StatusUnauthorized, iris.Map{
+            "error": "wrong username or password",
+        })
         return
     }
 
@@ -116,8 +115,6 @@ func notification(ctx *iris.Context) {
     jobQueue <- job
 
     increment("dolphin.api.v1.notification")
-
-    //ctx.Text(iris.StatusOK, "ok")
     ctx.JSON(iris.StatusOK, iris.Map{
         "status": "success",
     })
@@ -177,7 +174,6 @@ func message(ctx *iris.Context) {
     }
 
     increment("dolphin.api.v1.message")
-
     ctx.JSON(iris.StatusOK, iris.Map{
         "total": total,
         "page": page,
@@ -198,7 +194,6 @@ func application(ctx *iris.Context) {
     }
 
     increment("dolphin.api.v1.application")
-
     ctx.JSON(iris.StatusOK, iris.Map{
         "applications": rows,
     })
@@ -219,7 +214,7 @@ func increment(text string) {
     }
     c, err := statsd.New(statsd.Address(config.StatsdServer))
     if err != nil {
-        fmt.Printf("fail to initialize statsd %+v\n", err)
+        fmt.Errorf("fail to initialize statsd %+v\n", err)
     } else {
         // Increment a counter.
         c.Increment(text)

@@ -79,22 +79,25 @@ func notification(ctx *iris.Context) {
     data := &Data{}
     if err := ctx.ReadJSON(data); err != nil {
         ctx.JSON(iris.StatusInternalServerError, iris.Map{
-            "error": err,
+            "message": err,
+            "success": false,
         })
         return
     }
     if (!isAuthorized(data.AppId, data.AppKey)) {
         ctx.JSON(iris.StatusUnauthorized, iris.Map{
-            "error": "wrong username or password",
+            "message": "Invalid appId or appKey",
+            "success": false,
         })
         return
     }
 
     now := time.Now()
+    messageId := uuid.NewV4().String()
     notification := &util.Notification{
         AppId: data.AppId,
         AppKey: data.AppKey,
-        Id: uuid.NewV4().String(),
+        Id: messageId,
         Qos: 2,
         Retain: 1,
         Topic: data.Topic,
@@ -116,7 +119,8 @@ func notification(ctx *iris.Context) {
 
     increment("dolphin.api.v1.notification")
     ctx.JSON(iris.StatusOK, iris.Map{
-        "status": "success",
+        "success": true,
+        "message": messageId,
     })
 }
 

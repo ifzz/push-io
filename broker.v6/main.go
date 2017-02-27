@@ -37,6 +37,7 @@ func main() {
     app.Post("/api/v1/notification", notification)
     app.Get("/api/v1/message/:page/:pageSize", message)
     app.Get("/api/v1/application", application)
+    app.Get("/api/version", version)
 
     app.Listen(":8080")
 }
@@ -200,6 +201,12 @@ func application(ctx *iris.Context) {
     increment("dolphin.api.v1.application")
     ctx.JSON(iris.StatusOK, iris.Map{
         "applications": rows,
+    })
+}
+
+func version(ctx *iris.Context) {
+    ctx.JSON(iris.StatusOK, iris.Map{
+        "version": "2.0.1",
     })
 }
 

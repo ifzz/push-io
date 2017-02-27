@@ -8,6 +8,7 @@ import (
     "net/http"
     "strings"
     "gopkg.in/mgo.v2/bson"
+    "bytes"
 )
 
 type Notification struct {
@@ -20,8 +21,6 @@ type Notification struct {
     Retain      int `json:"-" bson:"retain"`
     Topic       string `json:"topic" bson:"topic"`
     Message     map[string]interface{} `json:"message" bson:"message"`
-    Error       string `json:"error" bson:"error"`
-    //Ack         bool `json:"ack" bson:"ack"`
 }
 
 func (n *Notification) Save() error {
@@ -101,7 +100,16 @@ func (n *Notification) Notify() error {
 
     jsonString, err := json.Marshal(content)
     if err != nil {
-        return err
+        e := Exception{
+            AppId: n.AppId,
+            AppKey: n.AppKey,
+            Id: n.Id,
+            Timestamp: n.Timestamp,
+            LastUpdated: n.LastUpdated,
+            Description: getErrorMessage([]error{err}),
+            Message: n.Message,
+        }
+        return e.Save()
     }
     fmt.Println(string(jsonString))
 
@@ -119,11 +127,26 @@ func (n *Notification) Notify() error {
         End()
 
     if len(errs) > 0 {
-        err := fmt.Sprintf("%+v", errs[0])
-        fmt.Println(err)
-        n.Error = err
+        e := Exception{
+            AppId: n.AppId,
+            AppKey: n.AppKey,
+            Id: n.Id,
+            Timestamp: n.Timestamp,
+            LastUpdated: n.LastUpdated,
+            Description: getErrorMessage(errs),
+            Message: n.Message,
+        }
+        return e.Save()
     }
-    //n.Ack = false
 
     return n.Save()
+}
+
+func getErrorMessage(errs []error) string {
+    var buffer bytes.Buffer
+    for _, e := range errs {
+        buffer.WriteString(e.Error())
+    }
+    fmt.Println(buffer.String())
+    return buffer.String()
 }

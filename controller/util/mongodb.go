@@ -3,7 +3,7 @@ package util
 import (
     "gopkg.in/mgo.v2"
     "fmt"
-    "time"
+    //"time"
 )
 
 func NewMongoSession() *mgo.Session {

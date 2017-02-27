@@ -21,11 +21,24 @@ func NewMongoSession() *mgo.Session {
 
     c := session.DB("dolphin").C("ack")
 
-    index := mgo.Index{
+    /*index := mgo.Index{
         Key: []string{"lastUpdated"},
         ExpireAfter: time.Duration(config.TTL) * time.Hour,
     }
     if err := c.EnsureIndex(index); err != nil {
+        panic(err)
+    }*/
+
+    index := mgo.Index{
+        Key:        []string{"id"},
+        Unique:     true,
+        DropDups:   true,
+        Background: true,
+        Sparse:     true,
+    }
+
+    err = c.EnsureIndex(index)
+    if err != nil {
         panic(err)
     }
 
